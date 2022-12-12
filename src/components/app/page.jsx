@@ -52,6 +52,10 @@ function *Page() {
     });
     */
 
+  /**
+   * Promise fetching markdown content
+   * @method {Promise} pullPage
+   */
   const pullPage = (pathname) => {
     fetch(`.${pathname}.md`, {headers: {'Accept': 'text/markdown'}})
       .then((res) => {
@@ -78,6 +82,9 @@ function *Page() {
       });
   };
 
+  /**
+   * Event listener - click loads new content and updates location
+   */
   this.addEventListener("click", async (ev) => {
     if (typeof ev.target.dataset.page === "undefined") return; // ignore other clicks
     ev.preventDefault();
@@ -94,7 +101,7 @@ function *Page() {
     let animate = markdown.animate({ opacity: 0.05 }, options);
 
     animate.addEventListener("finish", async () => {
-      await delay(1000); // pretend network load
+      //await delay(1000); // pretend network load
       pullPage(pathname);
       options.duration = 5000;
       animate = markdown.animate({ opacity: 1 }, animationOptions);

@@ -1,4 +1,18 @@
-@import "tachyons/src/tachyons.css";
+@import "tachyons/src/_normalize.css";
+
+@import "tachyons/src/_clears.css";
+@import "tachyons/src/_colors.css";
+@import "tachyons/src/_display.css";
+@import "tachyons/src/_flexbox.css";
+@import "tachyons/src/_hovers.css";
+@import "tachyons/src/_images.css";
+@import "tachyons/src/_max-widths.css";
+@import "tachyons/src/_media-queries.css";
+@import "tachyons/src/_spacing.css";
+@import "tachyons/src/_text-align.css";
+@import "tachyons/src/_utilities.css";
+@import "tachyons/src/_widths.css";
+
 @import "./styles/github-markdown.css";
 @import "./styles/github-highlight.scss";
 @import "./styles/app.scss";

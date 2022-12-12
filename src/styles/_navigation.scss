@@ -1,3 +1,17 @@
+@media only screen and (min-width: 481px) {
+  #burger {
+    display: none;
+  }
+}
+@media only screen and (max-width: 480px) {
+  #menu {
+    display: none;
+  }
+  #burger {
+    font-size: larger;
+    margin-right: 1em;
+  }
+}
 #navigation {
   transition: opacity 0.5s linear 0.1s;
   float: right;

@@ -10,6 +10,7 @@ import { marked } from "marked";
 
 import CollapseWrapper from "../lib/collapse-animator";
 import { DoubleArrowDownIcon } from "../lib/icon.jsx";
+import { DoubleArrowUpIcon } from "../lib/icon.jsx";
 
 /**
  * Credits component
@@ -90,11 +91,21 @@ function *Credits({ mode }) {
   for ({ mode } of this) {
     yield (
       <Fragment>
-        <div id="credits" class="footer mt3 mb3 pt3 bt">
-          <div onclick={ (e) => toggleCollapse() } class="pointer w-100 dib pt1 tr">
-            Website Credits
-            <DoubleArrowDownIcon />
+        <div id="credits" class="footer mt3 mb3 ml2 pt1 bt">
+          <div onclick={ (e) => toggleCollapse() } class="pointer w-100 dib mb3 pt1 flex">
+            <div class="w-50 pt2 b">
+              Website Credits
+            </div>
+            <div class="w-50 tr">
+              { collapsed ? (
+                <DoubleArrowDownIcon />
+              ) : (
+                <DoubleArrowUpIcon />
+              )}
+            </div>
           </div>
+        </div>
+        <div>
           { !loading && (
             <ContentWrapped
               id="credit-content"

@@ -7,6 +7,8 @@
  */
 import { createElement, Fragment } from "@b9g/crank";
 
+import { MenuIcon } from "../lib/icon.jsx";
+
 /**
  * Navigation component
  *
@@ -27,6 +29,10 @@ function *Navigation({ pathname }) {
    */
   let navigation = [];
 
+  /**
+   * Promise fetching navigation json definition
+   * @member {Promise} pull
+   */
   const pull = fetch(`./navigation.json`, {headers: {'Accept': 'application/json'}})
     .then((res) => {
       if (!res.ok) {
@@ -50,31 +56,36 @@ function *Navigation({ pathname }) {
       <Fragment>
         { !loading && navigation.length > 0 && (
           <div id="navigation">
-            <ul>
-              { navigation.map(el => (
-                el.subnav ? (
-                  <li class="dropdown">
-                    <a class="dropbtn link dim">{ el.title }</a>
-                    <div class="dropdown-content">
-                      { el.subnav.map(sub => (
-                        <a class="link dim"
-                          data-page={ sub.link } title={ sub.title }>
-                          { sub.title }
-                        </a>
-                      ))}
-                    </div>
-                  </li>
-                ) : (
-                  <li>
-                    <a class="link dim"
-                      style={ `color: ${pathname === el.link ? "orange" : "inherit"}` }
-                      href={ el.link }
-                      data-page={ el.link }
-                      title={ el.title }>{ el.title }</a>
-                  </li>
-                )
-              ))}
-            </ul>
+            <div id="burger">
+              <MenuIcon />
+            </div>
+            <div id="menu">
+              <ul>
+                { navigation.map(el => (
+                  el.subnav ? (
+                    <li class="dropdown">
+                      <a class="dropbtn link dim">{ el.title }</a>
+                      <div class="dropdown-content">
+                        { el.subnav.map(sub => (
+                          <a class="link dim"
+                            data-page={ sub.link } title={ sub.title }>
+                            { sub.title }
+                          </a>
+                        ))}
+                      </div>
+                    </li>
+                  ) : (
+                    <li>
+                      <a class="link dim"
+                        style={ `color: ${pathname === el.link ? "orange" : "inherit"}` }
+                        href={ el.link }
+                        data-page={ el.link }
+                        title={ el.title }>{ el.title }</a>
+                    </li>
+                  )
+                ))}
+              </ul>
+            </div>
           </div>
         )}
       </Fragment>
