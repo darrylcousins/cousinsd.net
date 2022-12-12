@@ -1,10 +1,27 @@
 
+/* light mode */
+:root {
+  --root-color: #313543;
+  --root-background: #fff;
+}
+
+/* dark mode */
+.dark-mode {
+  --root-color: #c9d1d9;
+  --root-background: #0d1117;
+}
+
 html {
-  color: #fff;
-  background: #313543;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  color: var(--root-color);
+  background: var(--root-background);
+  font-family: PT Sans,DejaVu Sans,Avenir, -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  font-size: smaller;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* font-size: smaller; */
 }
 html, body { margin: 0; padding: 0; }
+
+.footer {
+  border-color: #21262d;
+}

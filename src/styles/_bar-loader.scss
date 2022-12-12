@@ -1,12 +1,3 @@
-/* Color Variables */
-$fore: #769ddb;
-$gray-light: #eef1f3;
-
-/* Bar Variables */
-$bar-size: 2px;
-$bar-radius: 30px;
-$bar-bg: rgba(0,0,0,0.075);
-
 /* Animation */
 /* Edit these at random intervals to change the animation */
 @keyframes loader {
@@ -54,6 +45,12 @@ width: 100%;
 
 }
 
+/* Placeholder */
+.bar-placeholder {
+width: 100%;
+height: 4px;
+}
+
 /* Bar */
 .progress-bar {
 border-radius: $bar-radius;
@@ -71,7 +68,7 @@ background: $bar-bg;
 .progress {
 animation: loader 8s ease infinite;
 /* Change the animation fill mode 'infinite' to 'forwards' to stop the animation from repeating */
-background: $fore;
+background: $bar-fore;
 color: #fff;
 padding: $bar-size;
 width: 0;

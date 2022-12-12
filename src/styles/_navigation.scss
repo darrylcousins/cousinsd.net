@@ -1,0 +1,82 @@
+#navigation {
+  transition: opacity 0.5s linear 0.1s;
+  float: right;
+}
+#navigation.on {
+  opacity: 1;
+}
+/* start dropdown navigation */
+#navigation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: transparent;
+}
+#navigation ul li+li {
+  margin-top: 0;
+}
+#navigation ul li {
+  float: left;
+}
+/* picks up on dropdown list too
+#navigation > ul > li > a:first-of-type {
+  padding-left: 0px;
+}
+*/
+#navigation > ul > li > a:last-of-type {
+  padding-right: var(--spacing-small);
+}
+#navigation li a, #navigation .dropbtn {
+  display: inline-block;
+  color: $nav-parent-fore;
+  text-align: center;
+  padding: 10px 16px;
+  text-decoration: none;
+  background-color: $nav-parent-bg;
+  cursor: pointer;
+  /* prevent any outline highlighting on click */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#navigation li a:focus, #navigation .dropbtn:focus {
+  outline: none !important;
+}
+/*
+#navigation li a:hover, #navigation .dropdown:hover .dropbtn {
+  background-color: ivory;
+}
+*/
+#navigation li.dropdown {
+  display: inline-block;
+  margin-top: 0;
+}
+#navigation .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: $nav-dropdown-bg;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 3px;
+}
+#navigation .dropdown-content a {
+  color: $nav-dropdown-fore;
+  padding: 8px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+#navigation .dropdown-content a:hover {
+  background-color: $nav-dropdown-hover-bg;
+}
+#navigation .dropdown:hover .dropdown-content {
+  display: block;
+}
+/* end dropdown navigation */
+

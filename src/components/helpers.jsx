@@ -213,7 +213,7 @@ export const transitionElementHeight = (element, start) => {
   let calculatedHeight = start ? start : 5;
   // simply using el.scrollHeight can give some odd results when element is shrinking
   element.childNodes.forEach(el => {
-    calculatedHeight += el.scrollHeight;
+    if (typeof el.scrollHeight !== "undefined") calculatedHeight += el.scrollHeight;
   });
   element.style.height = calculatedHeight + "px";
 }
@@ -221,6 +221,7 @@ export const transitionElementHeight = (element, start) => {
 /*
  * @function delay
  * Wait for a time
+ * await delay(2000) - 2 secs
  *
  */
 export const delay = (t) => {

@@ -1,7 +1,7 @@
-import { MarkdownHotReload } from "./vite.plugins.js";
+import { SourcesHotReload } from "./vite.plugins.js";
 
 export default {
-  plugins: [ MarkdownHotReload() ],
+  plugins: [ SourcesHotReload() ],
   esbuild: {
     jsxFactory: 'createElement',
     jsxFragment: 'Fragment'

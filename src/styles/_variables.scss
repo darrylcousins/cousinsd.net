@@ -1,0 +1,24 @@
+
+/* Navigation */
+/* Color Variables */
+$nav-parent-bg: transparent;
+$nav-dropdown-bg: #f1f1f1;
+
+/* mode dependent - see app.scss for variables */
+$nav-parent-fore: var(--root-color);
+$nav-dropdown-fore: var(--root-background);
+$nav-dropdown-hover-bg: var(--root-color);
+/*$nav-parent-fore: white;
+$nav-dropdown-fore: darkblue;
+$nav-dropdown-hover-bg: white;*/
+
+/* Bar Loader */
+/* Color Variables */
+/*$bar-fore: #769ddb; blue */
+$bar-fore: orange;
+$bar-bg: rgba(0,0,0,0.075);
+
+/* Bar Variables */
+$bar-size: 2px;
+$bar-radius: 30px;
+

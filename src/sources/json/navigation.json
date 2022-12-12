@@ -1,0 +1,12 @@
+{
+  "navigation":[
+    {
+      "title":"Home",
+      "link":"/index"
+    },
+    {
+      "title":"BoxesApp",
+      "link":"/boxes"
+    }
+  ]
+}
