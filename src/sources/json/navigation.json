@@ -2,11 +2,13 @@
   "navigation":[
     {
       "title":"Home",
-      "link":"/index"
+      "link":"/index",
+      "description":"Landing page"
     },
     {
       "title":"BoxesApp",
-      "link":"/boxes"
+      "link":"/boxes",
+      "description":"Brief description and history of BoxesApp"
     }
   ]
 }

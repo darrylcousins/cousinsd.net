@@ -8,7 +8,8 @@
 import { createElement, Fragment, Raw } from "@b9g/crank";
 import { marked } from "marked";
 
-import CollapseWrapper from "../lib/collapse-animator";
+import { delay } from "../helpers.jsx";
+import CollapseWrapper from "../lib/collapse-animator.jsx";
 import { DoubleArrowDownIcon } from "../lib/icon.jsx";
 import { DoubleArrowUpIcon } from "../lib/icon.jsx";
 
@@ -43,18 +44,18 @@ function *Credits({ mode }) {
    * Control the collapse of the form
    * @function toggleCollapse
    */
-  const toggleCollapse = () => {
+  const toggleCollapse = async () => {
     collapsed = !collapsed;
-    this.refresh();
-    /*
-    if (document.getElementById("add-rule-button")) {
-      animateFadeForAction("add-rule-button", async () => await this.refresh());
-    } else if (document.getElementById("box-rules-add-form")) {
-      animateFadeForAction("box-rules-add-form", async () => await this.refresh());
-    } else {
-      this.refresh();
+    await this.refresh();
+    if (!collapsed) { // component has been collapsed
+      console.log("Want to scroll window");
+      setTimeout(() => {
+        const content = document.querySelector("#credit-content");
+        /* css html { scroll-behaviour: smooth } */
+        if (content) window.scrollBy(0, content.scrollHeight);
+        //if (content) window.scrollBy({ top: content.scrollHeight, behaviour: "smooth" });
+      }, 600);
     };
-    */
   };
 
   const pullContent = () => {
@@ -91,10 +92,10 @@ function *Credits({ mode }) {
   for ({ mode } of this) {
     yield (
       <Fragment>
-        <div id="credits" class="footer mt3 mb3 ml2 pt1 bt">
+        <div id="credits" class="footer mt3 mb3 pt1 bt">
           <div onclick={ (e) => toggleCollapse() } class="pointer w-100 dib mb3 pt1 flex">
             <div class="w-50 pt2 b">
-              Website Credits
+              Credits
             </div>
             <div class="w-50 tr">
               { collapsed ? (
@@ -105,7 +106,7 @@ function *Credits({ mode }) {
             </div>
           </div>
         </div>
-        <div>
+        <div class="pb3">
           { !loading && (
             <ContentWrapped
               id="credit-content"

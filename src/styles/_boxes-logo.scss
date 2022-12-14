@@ -1,0 +1,11 @@
+
+#boxes-logo {
+  background-repeat: no-repeat;
+  background-position: top left;
+}
+#boxes-logo.dark {
+  background-image: url(boxes-light.png);
+}
+#boxes-logo.light {
+  background-image: url(boxes-dark.png);
+}

@@ -20,10 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await renderer.render(
     <Fragment>
       <Page />
-      <footer class="footer ml2 mb3 pt3 tr bt">
-        <CopyrightIcon /> <span>Darryl Cousins
-        </span>
-      </footer>
+
     </Fragment>
   , document.querySelector("#app"));
 });

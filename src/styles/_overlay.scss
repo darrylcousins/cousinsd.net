@@ -1,0 +1,21 @@
+#overlay {
+  background-color: #000; 
+  opacity: 0.8;
+  filter: alpha(opacity = 80) !important;
+}
+
+#overlayContent {
+  top: 100px;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+#overlayImage {
+  /* max-width: 31em; expand image disabled at small screen size */
+  @media screen and (min-width: 30em) {
+    max-width: 47rem; /* mw5 - 1em */
+  }
+  @media screen and (min-width: 60em) {
+    max-width: 63em; /* mw6 - 1em */
+  }
+}

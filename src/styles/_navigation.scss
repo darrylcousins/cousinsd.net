@@ -1,15 +1,44 @@
+#menu-switch {
+  display: none;
+}
+#menu-switch:checked ~ #page-content {
+  margin-left: 200px;
+  opacity: 0.3;
+}
+#menu-switch:checked ~ #pushmenu {
+  left: 0;
+}
+#pushmenu {
+  position: fixed;
+  top: 40px;
+  left: -200px;
+
+  width: 300px;
+  height: 100%;
+  padding: 0px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
+  -webkit-transition: left .3s ease-in;
+  -moz-transition: left .3s ease-in;
+  -o-transition: left .3s ease-in;
+  transition: left .3s ease-in;
+
+  background-color: inherit;
+}
+#menu-toggle {
+  font-size: larger;
+  margin-right: 1em;
+}
 @media only screen and (min-width: 481px) {
-  #burger {
+  #menu-toggle {
     display: none;
   }
 }
 @media only screen and (max-width: 480px) {
   #menu {
     display: none;
-  }
-  #burger {
-    font-size: larger;
-    margin-right: 1em;
   }
 }
 #navigation {
@@ -42,13 +71,8 @@
   padding-right: var(--spacing-small);
 }
 #navigation li a, #navigation .dropbtn {
-  display: inline-block;
   color: $nav-parent-fore;
-  text-align: center;
-  padding: 10px 16px;
-  text-decoration: none;
   background-color: $nav-parent-bg;
-  cursor: pointer;
   /* prevent any outline highlighting on click */
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;

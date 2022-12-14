@@ -1,24 +1,23 @@
-# Cousinsd
+# Darryl Cousins
 
-Here some content in markdown format. And then some.
+## Introduction
 
-## Chapter One
+I was born in Aotearoa the year CO<sub>2</sub> atmospheric concentrations
+reached 320.96ppm, up from the around 280ppm that had been in balance for
+thousands of years. CO<sub>2</sub> has now reached 417.31ppm<sup>1</sup>, time
+is running out.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+M. and I live in a 100m<sup>2</sup> house on a ¼ acre section in a small rural
+town south of Ōtautahi. M. works on an
+organic vegetable farm and I pick up work here and there, though most of my
+time is my own and I have plenty to do.
 
-```javascript
-const toggleTest = () => {
-  console.log('hello');
-};
-function Test() {
-  console.log('wtf');
-};
-```
+I'm anxious about the climate crisis, mass extinction, and the extremism of the
+political right.
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+![Bar graph representing global warming using colour to indicate temperature difference from the 1971-2000 average, blue below, red above.](stripes-global.png "Bar graph representing global warming using colour to indicate temperature difference from the 1971-2000 average, blue below, red above")
 
-![alt text](stripes-global.png)
+<font size="2">Global temperature change: [Ed Hawkins](https://www.met.reading.ac.uk/~ed/home/index.php)
+(University of Reading) [#ShowYourStripes](https://showyourstripes.info/).</font>
 
-## Chapter Two
-
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+[1]: [Global CO<sub>2</sub> Levels](https://www.co2levels.org/)
