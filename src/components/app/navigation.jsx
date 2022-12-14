@@ -77,10 +77,10 @@ function *Navigation({ pathname }) {
                   { navigation.map(el => (
                     el.subnav ? (
                       <li class="dropdown">
-                        <a class="dropbtn link dim">{ el.title }</a>
-                        <div class="dropdown-content">
+                        <a class="dropbtn link dim dib tc ph2 pv2 pointer">{ el.title }</a>
+                        <div class="dropdown-content mt2">
                           { el.subnav.map(sub => (
-                            <a class="link dim"
+                            <a class="link dim" href={ el.link }
                               data-page={ sub.link } title={ sub.description }>
                               { sub.title }
                             </a>
