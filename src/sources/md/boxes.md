@@ -55,7 +55,7 @@ With the spread of the novel SARS-CoV-2 virus Aotearoa went into its first
 nationwide lockdown on the 25 March 2020. At the time [Streamside
 Organics](https://www.streamsideorganics.co.nz) (then operating as Spring
 Collective) was using [BuckyBox](https://www.buckybox.com/) to sell and market
-their vegatable boxes.  They had around 30-40 box customers, some
+their vegetable boxes.  They had around 30-40 box customers, some
 on a [Community Supported
 Agriculture](https://www.nal.usda.gov/farms-and-agricultural-production-systems/community-supported-agriculture)
 type scheme, and others paying weekly. For that first lockdown the rapid uptick
@@ -96,7 +96,7 @@ entire depth of a computer system application, and straddles two separate web
 development domains: the front end and the back end. In the case of
 [BoxesApp](https://boxesapp.nz") the front end has two parts, that for the
 customer can be seen in the screenshot above, and another is needed for
-administration of the boxes. For the back end a database and a webserver are
+administration of the boxes. For the back end a database and a web server are
 required, webhooks need to be registered to collect orders from the store, emails
 will need to be sent, etc.
 
@@ -139,7 +139,7 @@ The final noteworthy decision was one of deployment. I did try out a couple of
 cloud options but (and this may well be my lack of experience) frankly they did
 not pan out too well for me. So I went back to being my own sysadmin and using
 a virtual private server from [Rimuhosting](https://rimuhosting.com/) with whom
-I've been a customer since 2004 (excepting 2018-2020 after solemny swearing
+I've been a customer since 2004 (excepting the years 2018-2020 after solemnly swearing
 that I'd never code again).
 
 ### The Work
@@ -155,24 +155,45 @@ As 2020 came to a close, BuckyBox was expected to shut down and it was apparent
 that I needed to duplicate the **subscription** functionality of BuckyBox.
 Shopify itself did not support subscriptions at the time, though did introduce
 a subscription api in early 2021. So in September/October I was again pouring
-my spare time into adding subscription functionality to the BoxesApp. It was
-apparent that Streamside were not prepared to pay for my time, but I had made a
+my spare time into adding subscription functionality to BoxesApp. It was
+apparent that Streamside was not prepared to pay for my time, but I had made a
 commitment. They proposed to me that I should charge them a monthly fee for the
-app, to cover my server costs, maintainence, upgrades, and feature requests. I
+app, to cover my server costs, maintenance, upgrades, and feature requests. I
 really only had two choices, 1.  accept the proposal or, 2. withdraw my
 support. Because of my personal sense of obligation the second option was out
 of the question.
 
 ### Subscription App
 
-Below are some screenshots of how I managed to duplicate the BuckyBox
-functionality which does require an amount of adminstration effort from
+Below is a screenshot of how I duplicated the BuckyBox
+functionality which does require an amount of administration effort from
 Streamside:
 
 1. Take a payment for a set number of weeks and manually create and insert a
    subscription for the customer.
-2. Allow upload of weekly bank statements and code for reconcilation of
+2. Allow upload of weekly bank statements and code for reconciliation of
    payments against subscribers with an open subscription to generate the box orders.
+
+![Subscriptions](subscription.png "Screenshot from subscription app")
+
+### Data, Backups and Privacy
+
+The database contains the following tables:
+
+* boxes
+* orders: 
+* logs
+* settings
+* registry
+* subscriptions (to be deprecated)
+
+I made the conscious decision that no sensitive data is stored on the BoxesApp
+server (with the exception of address for orders). That is all stored by either
+Shopify or Recharge. BoxesApp does not process any payments. Nightly cron jobs
+are run and backup data files are emailed in json format to the admin. A weekly
+cron job removes boxes, orders, and logs older than 2 weeks (Shopify maintains
+all order data and no need to keep old boxes and logs as they remain available
+in json formatted backup files).
 
 ### Latest
 
@@ -180,29 +201,44 @@ With the release of Shopify's subscription api a number of third party apps
 have been created to work with the api. In particular [Recharge
 Payments](https://rechargepayments.com) has an extensive api and webhooks to
 which I could integrate my BoxesApp. So, this past winter (2022) I have
-extensively remodelled BoxesApp to include some missing features and integrate
-subscriptions directly with Recharge and Shopify (as can be seen in the client
-side screenshot at the top of this page). I managed to complete and release this
-in early September 2022, it is now December and it seems that the app is
-working well with around 30 Recharge subscriptions and a current average of
-close to 200 boxes per week. I also continue to run the old subscriptions as a
-separate app until such a time as Streamside can migrate their old
-subscriptions to use the Recharge/Shopify integration.
+extensively remodelled BoxesApp to include some missing features (especially
+more error catching and logging) and integrate subscriptions directly with
+Recharge and Shopify (as can be seen in the client side screenshot at the top
+of this page). I managed to complete and release this in early September 2022,
+it is now December and it seems that the app is working well with around 30
+Recharge subscriptions and a current average of close to 200 boxes per week. I
+also continue to run the old subscriptions as a separate app until such a time
+as Streamside can migrate their old subscriptions to use the Recharge/Shopify
+integration.
 
-### Renumeration
+### Remuneration
 
 My timekeeping over that last couple of years has been sparse and I can only
 give a rough estimate of the time spent coding the BoxesApp of well over 1000
 hours.  My server costs me NZD$40 per month and I have recently invoiced
-Streamside for 12 months at NZD$75 per month.
+Streamside for 12 months at NZD$75 per month. I'm a lousy
+capitalist. However, if there were 10 store owners using the app, or 100? But I
+do not want to be the person taking the app to that level. As indicated above
+I've sworn that I have had enough of coding for this life and my "wants" are
+minimal.
 
 ### The Future
 
+To be able to market the app to more store owners would take someone with a
+skill set that I lack. I struggle with the anxiety of knowing it is being
+used by one store owner and 200 customers. For example, I honestly don't know
+how much load my current setup could handle in order to figure out what level
+of resources would be required as more app instances were added. As the app
+stands, installation requires a far bit of manual setup which makes a "trial"
+install out of the question. The documentation requires a lot of work. The code
+itself would not stand up to industry standards; I have made efforts with
+[eslint](https://eslint.org/) and [jsdoc](https://jsdoc.app/) from time to time
+but mostly I've been pushing for results and lacked the time to follow through.
+
 I maintain a list of features and improvements that didn't get into the current
-version that I hope to be able to leave until next winter when I will need to
-make time for them. In the meantime I'm working on
-[documentation](https://boxesapp.nz). I will publish this document when the
-documentation is more complete.
+version that I hope to be able to complete next winter. In the meantime I'm
+working on [documentation](https://boxesapp.nz). I will publish this document
+when the documentation is more complete.
 
 Published: 16 Dec 2022 | Last edit: 16 Dec 2022
 

@@ -1,4 +1,4 @@
-This website has been coded by [Darryl Cousins](mailto:cousinsd.proton.me)
+This website has been coded by [Darryl Cousins](mailto:cousinsd@proton.me)
 using the following
 [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) packages.
 
