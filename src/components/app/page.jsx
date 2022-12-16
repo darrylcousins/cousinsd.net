@@ -128,8 +128,11 @@ function *Page() {
 
     pathname = ev.target.dataset.page;
     const pagetitle = ev.target.title;
-    const state = { additionalInformation: 'Updated the URL from navigation' };
-    window.history.pushState(state, pagetitle, pathname);
+
+    // pushing history means reloading page doesn't work: 404
+    // maybe something I can do server side?
+    //const state = { additionalInformation: 'Updated the URL from navigation' };
+    //window.history.pushState(state, pagetitle, pathname);
 
     // hide pushmenu
     document.querySelector("#menu-switch").checked = false;
@@ -181,7 +184,7 @@ function *Page() {
         </div>
         { loading ? <BarLoader /> : <div class="bar-placeholder"></div> }
         <div onclick={ (e) => toggleMode(mode === "dark" ? "light" : "dark") } class="pointer dib fl">
-          { mode === "dark" ? <DarkModeIcon /> : <LightModeIcon /> }
+          { mode === "dark" ? <LightModeIcon /> : <DarkModeIcon /> }
         </div>
         <div class="pointer dib mt2 mh2 fr">
           <a rel="me"
