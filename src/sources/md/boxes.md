@@ -40,8 +40,9 @@ customer may **swap** out products for another item from a list of available
 products, and are able to **add** items into the box from the same list. They
 may also change the quantity of any item in the box.
 
-A **custom** box is also offered which has no included items and the customer
-can *build* their box from the list of available products.
+A [custom](https://www.streamsideorganics.co.nz/products/custom-box "Custom
+Box") box is also offered which has no included items and the customer can
+*build* their box from the list of available products.
 
 </div>
 <div class="fl w-100 w-40-m w-30-l pl3-ns tc tl-ns">
