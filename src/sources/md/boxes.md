@@ -33,10 +33,12 @@ Payments](https://rechargepayments.com/ecommerce/shopify-subscriptions
 Each week the boxes can be updated by the store owner with products according
 to season and harvest. At [Streamside
 Organics](https://www.streamsideorganics.co.nz "Streamside Organics") they
-offer small, medium, and large boxes and are currently delivering close to 200
-boxes per week. The customer may **swap** out products for another item from a
-list of available products, and are able to **add** items into the box from the
-same list. They may also change the quantity of any item in the box.
+offer [small, medium, and large
+boxes](https://www.streamsideorganics.co.nz/collections/veggie-boxes-1 "Shop
+Veggie Boxes") and are currently delivering close to 200 boxes per week. The
+customer may **swap** out products for another item from a list of available
+products, and are able to **add** items into the box from the same list. They
+may also change the quantity of any item in the box.
 
 A **custom** box is also offered which has no included items and the customer
 can *build* their box from the list of available products.
