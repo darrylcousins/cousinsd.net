@@ -86,9 +86,10 @@ effective the store needed to allow:
 
 Most, but not all, of these requirements could be met using a stock standard
 store but required a lot of admin time. I think that
-[Shopify](https://www.shopify.com) is a fully featured web commerce software platform; furthermore,
-apps can be built on top of the extensive api that comes with the platform. Third party apps can
-add features and deliver unique customer experiences.
+[Shopify](https://www.shopify.com) is a fully featured web commerce software
+platform; furthermore, apps can be built on top of the extensive api that comes
+with the platform. Third party apps can add features and deliver unique
+customer experiences.
 
 At the time I was working on the farm with the harvesting crew. With a
 background that includes a good deal of coding, and a desire to help, I put my
@@ -195,12 +196,13 @@ The database contains the following tables:
 * subscriptions (to be deprecated)
 
 I made the conscious decision that no sensitive data is stored on the BoxesApp
-server (with the exception of address for orders). BoxesApp does not process any payments. All personal customer data
-is stored by Shopify and Recharge.
+server (with the exception of address for orders). BoxesApp does not process
+any payments. All personal customer data is stored by Shopify and Recharge.
 Nightly cron jobs are run and backup data files are emailed in json format to
 the admin. A weekly cron job removes boxes, orders, and logs older than 2 weeks
-(Shopify and Recharge both maintain all historic order and subscription data and boxes
-and logs created in BoxesApp remain available in json formatted backup files).
+(Shopify and Recharge both maintain all historic order and subscription data
+and boxes and logs created in BoxesApp remain available in json formatted
+backup files).
 
 ### Latest
 
@@ -248,5 +250,5 @@ version that I hope to be able to complete next winter. In the meantime I'm
 working on [documentation](https://boxesapp.nz). I will publish this document
 when the documentation is more complete.
 
-Published Friday December 16 2022.
+Published December 20 2022.
 

@@ -15,8 +15,13 @@ import BarLoader from "../lib/bar-loader.jsx";
 import {
   LightModeIcon,
   DarkModeIcon,
+  PreviewIcon,
 } from "../lib/icon.jsx";
-import { delay, animationOptions } from "../helpers.jsx";
+import {
+  delay,
+  animationOptions,
+  animateFadeForAction,
+} from "../helpers.jsx";
 
 /**
  * Page component
@@ -40,6 +45,25 @@ function *Page() {
   let mode = "dark";
 
   /**
+   * Text indicator - parsed html or plain markdown text?
+   * @member {boolean} parsed
+   */
+  let parsed = true;
+
+  /**
+   * Markdown content
+   * @member {string} md
+   */
+  let md = "";
+
+  /**
+   * Markdown content presented as <pre><code> block
+   * Initialize as empty, populate on showSource, then retained
+   * @member {string} md_html
+   */
+  let md_html = "";
+
+  /**
    * Parsed markdown content
    * @member {string} html
    */
@@ -50,12 +74,12 @@ function *Page() {
     const content = document.querySelector("#page-content");
     const app = document.querySelector("#app");
     if (window.innerWidth <= 480) { // mw7 40em
-      content.querySelectorAll('img').forEach((el) => {
+      content.querySelectorAll("img").forEach((el) => {
         el.removeEventListener("click", showImage);
         el.classList.remove("pointer");
       });
     } else {
-      content.querySelectorAll('img').forEach((el) => {
+      content.querySelectorAll("img").forEach((el) => {
         el.addEventListener("click", showImage);
         el.classList.add("pointer");
       });
@@ -91,21 +115,27 @@ function *Page() {
    * @method {Promise} pullPage
    */
   const pullPage = (pathname) => {
-    fetch(`.${pathname}.md`, {headers: {'Accept': 'text/markdown'}})
+    fetch(`.${pathname}.md`, {
+      headers: {
+        "Accept": "text/markdown",
+        "Cache-Control": "no-cache",
+      }})
       .then((res) => {
         if (!res.ok) {
           throw new Error(`${res.status} (${res.statusText})`);
         }
         return res.text();
       }).then((text) => {
-        const parsed = marked.parse(text);
-        const div = document.createElement('div');
-        div.innerHTML = parsed.trim();
+        console.log(text);
+        const div = document.createElement("div");
+        div.innerHTML = marked.parse(text).trim();
         // highlight code syntax - see also registerLanguage in main.jsx
-        div.querySelectorAll('pre code').forEach((el) => {
+        div.querySelectorAll("pre code").forEach((el) => {
           hljs.highlightElement(el);
         });
         html = div.innerHTML;
+        md = text;
+        parsed = true; // always start with parsed html
       }).catch((err) => {
         html = `
         <h1>${err.message}</h1>
@@ -116,6 +146,40 @@ function *Page() {
         await this.refresh();
         imageEvents();
       });
+  };
+
+  /**
+   * Replace parsed source with markdown text
+   * @method {Promise} showSource
+   *
+   * To format code with the pre tag in React and JSX, we should put the code
+   * we want to display in template literals.
+   *      <pre><code>
+   *        Some code text ${ `<img src="bleh" />` }
+   *      </code></pre>
+   */
+  const showSource = async () => {
+    if (parsed) {
+      //const t = hljs.highlightAuto(`${md}`).value
+      const fence = "```";
+      const t = `
+<h3>Showing Markdown Source For ${pathname}</h3>
+
+${ `${ fence }markdown` }
+${ `${ md }` }
+${ `${ fence }` }
+  `;
+      md_html = marked.parse(t).trim();
+    };
+    parsed = !parsed;
+    animateFadeForAction("page-content", () => this.refresh());
+    /*
+    animateFadeForAction("page-content", () => {
+      //this.refresh();
+      const p = document.querySelector("#page-content");
+      p.innerHTML = md_html;
+    });
+    */
   };
 
   /**
@@ -183,8 +247,15 @@ function *Page() {
             class="ba bw1 br2 b--white b--solid pointer" />
         </div>
         { loading ? <BarLoader /> : <div class="bar-placeholder"></div> }
-        <div onclick={ (e) => toggleMode(mode === "dark" ? "light" : "dark") } class="pointer dib fl">
+        <div onclick={ (e) => toggleMode(mode === "dark" ? "light" : "dark") }
+          title={ `Switch to ${mode === "dark" ? "light" : "dark"} mode` }
+          class="pointer dib fl">
           { mode === "dark" ? <LightModeIcon /> : <DarkModeIcon /> }
+        </div>
+        <div onclick={ (e) => showSource() }
+          title={ `${parsed ? "Show" : "Hide" } markdown source` }
+          class="pointer dib fl ml2">
+          <PreviewIcon />
         </div>
         <div class="pointer dib mt2 mh2 fr">
           <a rel="me"
@@ -199,7 +270,11 @@ function *Page() {
         <Navigation pathname={ pathname } />
         <div class="cf"></div>
         <div id="page-content" role="main" class={ `markdown-body ${mode}-mode` }>
-          <Raw value={ html } />
+          { parsed ? (
+            <Raw value={ html } />
+          ) : (
+            <Raw value={ md_html } />
+          )}
         </div>
         <footer class="footer pb2 pt3 mt3 tr bt">
           Darryl Cousins
@@ -216,6 +291,5 @@ function *Page() {
     );
   };
 };
-
 
 export default Page;

@@ -107,6 +107,4 @@ function *Navigation({ pathname }) {
   };
 };
 
-
 export default Navigation;
-
