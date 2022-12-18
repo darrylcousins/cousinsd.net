@@ -2,14 +2,22 @@
 
 ## Introduction
 
-I was born in Aotearoa the year CO<sub>2</sub> atmospheric concentrations
+I was born in Aotearoa the year CO₂ atmospheric concentrations
 reached 320.96ppm, up from the around 280ppm that had been in balance for
-thousands of years. CO<sub>2</sub> has now reached 417.31ppm<sup>1</sup>, time
+thousands of years. CO₂ has now reached 417.31ppm¹, time
 is running out.
 
-M. and I live in a 100m<sup>2</sup> house on a ¼ acre section in a small rural
+M. and I live in a 100m² house on a ¼ acre section in a small rural
 town south of Ōtautahi. M. works on an organic vegetable farm and I pick up
 work here and there, though most of my time is my own and I have plenty to do.
+
+A number of creatures found a home here when one was needed. When M. bought the
+house in 2011 it came with several cockatiels in an outdoor aviary and goldfish
+in an outdoor pond. There's an ever changing population of guppies in an
+aquarium, Toots and Terry the red-eared terrapins, Peaches, the adult cat, and
+the year old kittens, Lloyd and Fern. Most recently came Ed, a black
+labrador/German short haired pointer, who was rescued by
+[Dogwatch](https://dogwatch.co.nz/), December 2021. 
 
 I'm anxious about the climate crisis, mass extinction, and the extremism of the
 political right.
