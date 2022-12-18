@@ -136,7 +136,6 @@ function *Page() {
         // place 4 spaces at start of each line for nested code block
         md = text.split("\n").map(line => `    ${line}`).join("\n");
         parsed = true; // always start with parsed html
-        history.pushState("", "", pathname)
       }).catch((err) => {
         html = `
         <h1>${err.message}</h1>
@@ -182,10 +181,7 @@ ${ `${ fence }` }
     pathname = ev.target.dataset.page;
     const pagetitle = ev.target.title;
 
-    // pushing history means reloading page doesn't work: 404
-    // maybe something I can do server side?
-    //const state = { additionalInformation: 'Updated the URL from navigation' };
-    //window.history.pushState(state, pagetitle, pathname);
+    history.pushState("", "", pathname)
 
     // hide pushmenu
     document.querySelector("#menu-switch").checked = false;

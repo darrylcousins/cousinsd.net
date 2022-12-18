@@ -233,17 +233,20 @@ enough of coding for this life and my "wants" are minimal.
 
 ### The Future
 
-To be able to market the app to more store owners would take someone with a
-skill set that I lack. I struggle with the anxiety of knowing it is being used
-by one store owner and 200 customers - I reckon I'd fall apart if it were 10
-stores and 2000 customers. For example, I honestly don't know how much load my
-current setup could handle in order to figure out what level of resources would
-be required as more app instances were added. As the app stands, installation
-requires a far bit of manual setup which makes a "trial" install out of the
-question. The documentation requires a lot of work. The code itself would not
-stand up to industry standards; I have made efforts with
-[eslint](https://eslint.org/) and [jsdoc](https://jsdoc.app/) from time to time
-but mostly I've been pushing for results and lacked the time to follow through.
+Marketing the app to more store owners would take someone with a skill set that
+I lack. I struggle with the anxiety of knowing it is being used by one store
+owner and 200 customers - I reckon I'd fall apart if it were 10 stores and 2000
+customers. For example, I honestly don't know how much load my current setup
+could handle in order to figure out what level of resources would be required
+as more app instances were added. As the app stands, installation requires a
+fair bit of manual setup which makes a "trial" install out of the question. The
+documentation requires more work. The code itself would not stand up to
+industry standards; I have made efforts with [eslint](https://eslint.org/) and
+[jsdoc](https://jsdoc.app/) from time to time but mostly I've been pushing for
+results and lacked the time to follow through. Similarly there is very little
+in the way of automated testing. Even with my poor ability to estimate coding
+time I can see that these three would entail a further investment of ... let me
+just say, countless ... hours.
 
 I maintain a list of features and improvements that didn't get into the current
 version that I hope to be able to complete next winter. In the meantime I'm
