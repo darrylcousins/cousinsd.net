@@ -126,7 +126,6 @@ function *Page() {
         }
         return res.text();
       }).then((text) => {
-        console.log(text);
         const div = document.createElement("div");
         div.innerHTML = marked.parse(text).trim();
         // highlight code syntax - see also registerLanguage in main.jsx
@@ -134,8 +133,10 @@ function *Page() {
           hljs.highlightElement(el);
         });
         html = div.innerHTML;
-        md = text;
+        // place 4 spaces at start of each line for nested code block
+        md = text.split("\n").map(line => `    ${line}`).join("\n");
         parsed = true; // always start with parsed html
+        history.pushState("", "", pathname)
       }).catch((err) => {
         html = `
         <h1>${err.message}</h1>
@@ -152,11 +153,6 @@ function *Page() {
    * Replace parsed source with markdown text
    * @method {Promise} showSource
    *
-   * To format code with the pre tag in React and JSX, we should put the code
-   * we want to display in template literals.
-   *      <pre><code>
-   *        Some code text ${ `<img src="bleh" />` }
-   *      </code></pre>
    */
   const showSource = async () => {
     if (parsed) {
@@ -173,13 +169,6 @@ ${ `${ fence }` }
     };
     parsed = !parsed;
     animateFadeForAction("page-content", () => this.refresh());
-    /*
-    animateFadeForAction("page-content", () => {
-      //this.refresh();
-      const p = document.querySelector("#page-content");
-      p.innerHTML = md_html;
-    });
-    */
   };
 
   /**
