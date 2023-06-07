@@ -36,6 +36,15 @@ server {
 		root /home/cousinsd/Web/cousinsd.net;
 
 	}
+	location /scripts/ {
+	     gzip off;
+	     root /home/cousinsd/Web/cousinsd.net/src/mastodon/;
+	     fastcgi_pass  unix:/var/run/fcgiwrap.socket;
+	     include /etc/nginx/fastcgi_params;
+	     # fastcgi_param SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+             # fix this if needed another script, can I use $request_filename, as in *.md below?
+	     fastcgi_param SCRIPT_FILENAME  /home/cousinsd/Web/cousinsd.net/src/mastodon/index;
+	}
 	location ~* \.md {
 		root /home/cousinsd/Web/cousinsd.net/src/sources/md;
 		add_header 'Vary' 'Accept';
@@ -67,5 +76,4 @@ server {
 		break;
 	}
 }
-
 ```
