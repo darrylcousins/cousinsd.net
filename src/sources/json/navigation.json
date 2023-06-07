@@ -6,8 +6,8 @@
       "description":"Landing page"
     },
     {
-      "title":"Account",
-      "link":"/mastodon",
+      "title":"About",
+      "link":"/about",
       "description":"@cousinsd"
     },
     {

@@ -212,7 +212,7 @@ function *Account({ json }) {
         <div class={ wrapper_class } style={ wrapper_style }>
           <div class="pl4 pb4 pt3">
             <div class={ inner_class }>
-              <div class="b pb2" style="font-family: Garamond, serif;">
+              <div class="pb2 fw3 f3">
                 { status.created.toDateString() } { " " }
                 { `${ status.created.getHours() }`.padStart(2, "0") }
                 :{ `${ status.created.getMinutes() }`.padStart(2, "0") }

@@ -80,7 +80,7 @@ function *Page() {
    * Page type: one of "markdown" or "json"
    * @member {string} pagetype
    */
-  let pagetype = pathname === "/mastodon" ? "json" : "markdown";
+  let pagetype = pathname === "/index" ? "json" : "markdown";
 
   const imageEvents = () => {
     // add event listener for expanding image to all markdown content images if screen size large
@@ -254,7 +254,7 @@ ${ `${ fence }` }
 
     animate.addEventListener("finish", async () => {
       await delay(1000); // pretend network load
-      if (pathname === "/mastodon") {
+      if (pathname === "/index") {
         pagetype = "json";
         pullAccount();
       } else {
