@@ -6,9 +6,14 @@
       "description":"Landing page"
     },
     {
+      "title":"Account",
+      "link":"/mastodon",
+      "description":"@cousinsd"
+    },
+    {
       "title":"BoxesApp",
       "link":"/boxes",
-      "description":"Brief description and history of BoxesApp"
+      "description":"A description and history of BoxesApp"
     }
   ]
 }

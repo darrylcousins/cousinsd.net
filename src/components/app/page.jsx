@@ -9,6 +9,7 @@ import { createElement, Fragment, Raw } from "@b9g/crank";
 import { marked } from "marked";
 import hljs from "highlight.js/lib/core";
 
+import Account from "./account.jsx";
 import Navigation from "./navigation.jsx";
 import Credits from "./credits.jsx";
 import BarLoader from "../lib/bar-loader.jsx";
@@ -51,23 +52,35 @@ function *Page() {
   let parsed = true;
 
   /**
-   * Markdown content
-   * @member {string} md
+   * Source content either markdown or json strings
+   * @member {string} source
    */
-  let md = "";
+  let source = "";
 
   /**
    * Markdown content presented as <pre><code> block
    * Initialize as empty, populate on showSource, then retained
-   * @member {string} md_html
+   * @member {string} source_html
    */
-  let md_html = "";
+  let source_html = "";
 
   /**
    * Parsed markdown content
    * @member {string} html
    */
   let html = "";
+
+  /**
+   * Initialize pathname from location
+   * @member {string} pathname
+   */
+  let pathname = window.location.pathname === "/" ? "/index" : window.location.pathname;
+
+  /**
+   * Page type: one of "markdown" or "json"
+   * @member {string} pagetype
+   */
+  let pagetype = pathname === "/mastodon" ? "json" : "markdown";
 
   const imageEvents = () => {
     // add event listener for expanding image to all markdown content images if screen size large
@@ -111,6 +124,36 @@ function *Page() {
   });
 
   /**
+   * Promise fetching json mastodon account content
+   * @method {Promise} pullAccount
+   */
+  const pullAccount = () => {
+    fetch(`./mastodon/index`, {
+      headers: {
+        "Accept": "text/plain",
+        "Cache-Control": "no-cache",
+      },
+      //mode: "no-cors",
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log(`${res.status} (${res.statusText})`);
+        };
+        return res.text();
+      })
+      .then((text) => {
+        source = JSON.parse(text);
+      }).catch((e) => {
+        console.log(e);
+      }).finally(async () => {
+        // animate this
+        loading = false;
+        await this.refresh();
+        //imageEvents();
+      });
+  };
+
+  /**
    * Promise fetching markdown content
    * @method {Promise} pullPage
    */
@@ -134,7 +177,7 @@ function *Page() {
         });
         html = div.innerHTML;
         // place 4 spaces at start of each line for nested code block
-        md = text.split("\n").map(line => `    ${line}`).join("\n");
+        source = text.split("\n").map(line => `    ${line}`).join("\n");
         parsed = true; // always start with parsed html
       }).catch((err) => {
         html = `
@@ -155,16 +198,34 @@ function *Page() {
    */
   const showSource = async () => {
     if (parsed) {
-      //const t = hljs.highlightAuto(`${md}`).value
+      //const t = hljs.highlightAuto(`${source}`).value
       const fence = "```";
+      let title;
+      let content_source = source;
+      if (pagetype === "markdown") {
+        title = "Markdown";
+      } else {
+        title = "JSON";
+        content_source = JSON.stringify(source, null, 2);
+      };
       const t = `
-<h3>Showing Markdown Source For ${pathname}</h3>
+<h3>Showing ${title} Source For ${pathname}</h3>
 
-${ `${ fence }markdown` }
-${ `${ md }` }
+${ `${ fence }${ title.toLowerCase() }` }
+${ `${ content_source }` }
 ${ `${ fence }` }
   `;
-      md_html = marked.parse(t).trim();
+      if (pagetype === "markdown") { // markdown highlighting uninspired
+        source_html = marked.parse(t).trim();
+      } else {
+        const div = document.createElement("div");
+        div.innerHTML = marked.parse(t).trim();
+        // highlight code syntax - see also registerLanguage in main.jsx
+        div.querySelectorAll("pre code").forEach((el) => {
+          hljs.highlightElement(el);
+        });
+        source_html = div.innerHTML;
+      };
     };
     parsed = !parsed;
     animateFadeForAction("page-content", () => this.refresh());
@@ -186,16 +247,22 @@ ${ `${ fence }` }
     // hide pushmenu
     document.querySelector("#menu-switch").checked = false;
     loading = true;
-    this.refresh();
-    const markdown = document.querySelector("#page-content");
+    await this.refresh();
+    const content = document.querySelector("#page-content");
     const options = { ...animationOptions };
-    let animate = markdown.animate({ opacity: 0.05 }, options);
+    let animate = content.animate({ opacity: 0.05 }, options);
 
     animate.addEventListener("finish", async () => {
-      //await delay(1000); // pretend network load
-      pullPage(pathname);
+      await delay(1000); // pretend network load
+      if (pathname === "/mastodon") {
+        pagetype = "json";
+        pullAccount();
+      } else {
+        pagetype = "markdown";
+        pullPage(pathname);
+      };
       options.duration = 5000;
-      animate = markdown.animate({ opacity: 1 }, animationOptions);
+      animate = content.animate({ opacity: 1 }, animationOptions);
     });
 
     ev.target.blur();
@@ -203,10 +270,6 @@ ${ `${ fence }` }
     // prevent href action on link
     return false;
   });
-
-  let pathname = window.location.pathname === "/" ? "/index" : window.location.pathname;
-
-  pullPage(pathname);
 
   const toggleMode = (value) => {
     mode = value;
@@ -222,6 +285,12 @@ ${ `${ fence }` }
   // initialized with dark-mode
   document.documentElement.classList.toggle(`${mode}-mode`, true);
 
+  if (pagetype === "markdown") {
+    pullPage(pathname);
+  } else {
+    pullAccount();
+  };
+
   while(true) {
     yield (
       <Fragment>
@@ -231,14 +300,13 @@ ${ `${ fence }` }
             onclick={ hideImage }
             class="ba bw1 br2 b--white b--solid pointer" />
         </div>
-        { loading ? <BarLoader /> : <div class="bar-placeholder"></div> }
         <div onclick={ (e) => toggleMode(mode === "dark" ? "light" : "dark") }
           title={ `Switch to ${mode === "dark" ? "light" : "dark"} mode` }
           class="pointer dib fl">
           { mode === "dark" ? <LightModeIcon /> : <DarkModeIcon /> }
         </div>
         <div onclick={ (e) => showSource() }
-          title={ `${parsed ? "Show" : "Hide" } markdown source` }
+          title={ `${parsed ? "Show" : "Hide" } content source` }
           class="pointer dib fl ml2">
           <PreviewIcon />
         </div>
@@ -254,11 +322,16 @@ ${ `${ fence }` }
         </div>
         <Navigation pathname={ pathname } />
         <div class="cf"></div>
+        { loading ? <BarLoader /> : <div class="bar-placeholder"></div> }
         <div id="page-content" role="main" class={ `markdown-body ${mode}-mode` }>
           { parsed ? (
-            <Raw value={ html } />
+            pagetype === "markdown" ? (
+              <Raw value={ html } />
+            ) : (
+              <Account json={ source } />
+            )
           ) : (
-            <Raw value={ md_html } />
+            <Raw value={ source_html } />
           )}
         </div>
         <footer class="footer pb2 pt3 mt3 tr bt">

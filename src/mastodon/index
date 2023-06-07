@@ -1,0 +1,61 @@
+#!/usr/bin/node
+
+// requires node 18 for fetch api
+
+/*
+ * For statuses:
+ * https://docs.joinmastodon.org/methods/accounts/#statuses
+ *  min_id
+ *  max_id
+ *  since_id
+ *  limit
+ *  exclude_replies
+ *  exclude_reblogs
+ *  tagged
+ */
+
+const process = require("node:process");
+const querystring = require('node:querystring');
+
+//const account = process.env["MASTODON_ACCOUNT"];
+const account = "109333323498794372";
+const endpoint = "";
+
+const getData = async () => {
+  const query = querystring.parse(process.env["QUERY_STRING"]);
+  const endpoint = Object.hasOwnProperty.call(query, "endpoint") ? query.endpoint : "";
+  delete query.endpoint;
+  let url = `https://mastodon.nz/api/v1/accounts/${ account }/${ endpoint }`;
+  if (Object.keys(query).length > 0) url += `?${querystring.stringify(query)}`;
+  return fetch(url, {
+    headers: {
+      "Accept": "text/plain",
+      "Cache-Control": "no-cache",
+    },
+    //mode: "no-cors",
+  })
+  .then(res => {
+    return res.text();
+  })
+  .then((text) => {
+    const json = JSON.parse(text);
+    json.url = url;
+    return JSON.stringify(json, null, 2);
+    //return text;
+  })
+  .catch((err) => {
+    return {
+      error: err.message
+    };
+  })
+  .finally(() => {
+    return {
+      error: "Failed to fetch"
+    };
+  });
+};
+
+console.log("content-type: text/plain\n");
+
+getData().then(res => console.log(res)).catch(e => console.log(e));
+

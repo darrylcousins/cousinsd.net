@@ -47,7 +47,34 @@ html, body { margin: 0; padding: 0; height: 100%; }
   border-width: 1px 0 0 0;
   border-style: solid;
   border-color: var(--color-border-muted);
-  margin: 1em 0;
+  /* margin: 1em 0; */
+}
+
+.status-post {
+  border-width: 0 1px 0 1px;
+  border-style: solid;
+  border-color: var(--color-border-muted);
+}
+
+.status-post-child:before {
+  content: "B";
+}
+
+.status-post-card:hover {
+  text-decoration: none;
+}
+
+.status-post-card > .status-post-link {
+  transition: background-color .15s ease-in;
+}
+
+.status-post-card:hover > .status-post-link {
+  background-color: #313543;
+  text-decoration: none;
+}
+
+.flip-horizontally {
+  transform: scaleX(-1);
 }
 
 .footer {
