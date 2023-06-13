@@ -7,7 +7,7 @@
  */
 import { createElement, Fragment } from "@b9g/crank";
 
-import { MenuIcon } from "../lib/icon.jsx";
+import { MenuIcon } from "../lib/icons.jsx";
 
 /**
  * Navigation component

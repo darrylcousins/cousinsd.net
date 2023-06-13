@@ -10,8 +10,7 @@ import { marked } from "marked";
 
 import { delay } from "../helpers.jsx";
 import CollapseWrapper from "../lib/collapse-animator.jsx";
-import { DoubleArrowDownIcon } from "../lib/icon.jsx";
-import { DoubleArrowUpIcon } from "../lib/icon.jsx";
+import { DoubleArrowDownIcon, DoubleArrowUpIcon } from "../lib/icons.jsx";
 
 /**
  * Credits component

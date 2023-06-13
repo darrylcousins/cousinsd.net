@@ -17,7 +17,7 @@ import {
   LightModeIcon,
   DarkModeIcon,
   PreviewIcon,
-} from "../lib/icon.jsx";
+} from "../lib/icons.jsx";
 import {
   delay,
   animationOptions,
@@ -82,53 +82,12 @@ function *Page() {
    */
   let pagetype = pathname === "/index" ? "json" : "markdown";
 
-  const imageEvents = () => {
-    // add event listener for expanding image to all markdown content images if screen size large
-    const content = document.querySelector("#page-content");
-    const app = document.querySelector("#app");
-    if (window.innerWidth <= 480) { // mw7 40em
-      content.querySelectorAll("img").forEach((el) => {
-        el.removeEventListener("click", showImage);
-        el.classList.remove("pointer");
-      });
-    } else {
-      content.querySelectorAll("img").forEach((el) => {
-        el.addEventListener("click", showImage);
-        el.classList.add("pointer");
-      });
-    };
-  };
-
-  window.addEventListener("resize", imageEvents);
-
-  const showImage = (ev) => {
-    document.querySelector("#overlayImage").setAttribute("src", ev.target.src);
-    document.querySelector("#overlay").classList.remove("dn");
-    document.querySelector("#overlay").classList.add("aspect-ratio--object", "db", "fixed");
-    document.querySelector("#overlayContent").classList.remove("dn");
-    document.querySelector("#overlayContent").classList.add("db");
-  };
-
-  const hideImage = (ev) => {
-    document.querySelector("#overlayImage").setAttribute("src", "");
-    document.querySelector("#overlay").classList.add("dn");
-    document.querySelector("#overlay").classList.remove("aspect-ratio--object", "db");
-    document.querySelector("#overlayContent").classList.remove("db");
-    document.querySelector("#overlayContent").classList.add("dn");
-  };
-
-  document.documentElement.addEventListener("keyup", (ev) => {
-    if (ev.key === "Escape") { // escape key maps to keycode `27`
-      hideImage();
-    }
-  });
-
   /**
    * Promise fetching json mastodon account content
    * @method {Promise} pullAccount
    */
   const pullAccount = () => {
-    fetch(`./mastodon/index`, {
+    fetch(`./scripts/index`, {
       headers: {
         "Accept": "text/plain",
         "Cache-Control": "no-cache",
@@ -144,12 +103,11 @@ function *Page() {
       .then((text) => {
         source = JSON.parse(text);
       }).catch((e) => {
-        console.log(e);
+        console.warn(e);
       }).finally(async () => {
         // animate this
         loading = false;
         await this.refresh();
-        //imageEvents();
       });
   };
 
@@ -187,7 +145,6 @@ function *Page() {
         // animate this
         loading = false;
         await this.refresh();
-        imageEvents();
       });
   };
 
@@ -294,12 +251,6 @@ ${ `${ fence }` }
   while(true) {
     yield (
       <Fragment>
-        <div id="overlay" class="dn"></div>
-        <div id="overlayContent" class="fixed dn h-100 w-100 tl">
-          <img id="overlayImage" src="" alt=""
-            onclick={ hideImage }
-            class="ba bw1 br2 b--white b--solid pointer" />
-        </div>
         <div onclick={ (e) => toggleMode(mode === "dark" ? "light" : "dark") }
           title={ `Switch to ${mode === "dark" ? "light" : "dark"} mode` }
           class="pointer dib fl">

@@ -9,7 +9,7 @@ import { createElement, Fragment, Raw } from "@b9g/crank";
 import {
   ClearAllIcon,
   DescriptionOutlinedIcon,
-} from "../lib/icon.jsx";
+} from "../lib/icons.jsx";
 
 /**
  * Credits component
@@ -19,6 +19,13 @@ import {
  * { <Credits /> }
  */
 function *Account({ json }) {
+
+  /**
+   * Hold visibility state of a status image
+   *
+   * @member {boolean} visible // probably an object image.src
+   */
+  let visible = {};
 
   /**
    * Infinite scrolling
@@ -78,6 +85,49 @@ function *Account({ json }) {
    */
   let final_statuses = [];
 
+  const imageEvents = () => {
+    // add event listener for expanding image to all markdown content images if screen size large
+    const content = document.querySelector("#page-content");
+    const app = document.querySelector("#app");
+    if (window.innerWidth <= 480) { // mw7 40em
+      content.querySelectorAll("div.cover").forEach((el) => {
+        el.removeEventListener("click", showImage);
+        el.classList.remove("pointer");
+      });
+    } else {
+      content.querySelectorAll("div.cover").forEach((el) => {
+        el.addEventListener("click", showImage);
+        el.classList.add("pointer");
+      });
+    };
+  };
+
+  window.addEventListener("resize", imageEvents);
+
+  const showImage = (ev) => {
+    console.log(ev.target.getAttribute("data-src"));
+    document.querySelector("#overlayImage").setAttribute("src", ev.target.getAttribute("data-src"));
+    document.querySelector("#overlayImage").setAttribute("title", "Close");
+    document.querySelector("#overlay").classList.remove("dn");
+    document.querySelector("#overlay").classList.add("aspect-ratio--object", "db", "fixed");
+    document.querySelector("#overlayContent").classList.remove("dn");
+    document.querySelector("#overlayContent").classList.add("db");
+  };
+
+  const hideImage = (ev) => {
+    document.querySelector("#overlayImage").setAttribute("src", "");
+    document.querySelector("#overlay").classList.add("dn");
+    document.querySelector("#overlay").classList.remove("aspect-ratio--object", "db");
+    document.querySelector("#overlayContent").classList.remove("db");
+    document.querySelector("#overlayContent").classList.add("dn");
+  };
+
+  document.documentElement.addEventListener("keyup", (ev) => {
+    if (ev.key === "Escape") { // escape key maps to keycode `27`
+      hideImage();
+    }
+  });
+
   /**
    * Promise fetching json mastodon account content
    * @method {Promise} pullAccount
@@ -122,7 +172,6 @@ function *Account({ json }) {
           copy.card = status.card;
           copy.children = []; // child statuses in thread
           copy.child_ids = []; // child status id in thread
-          if (copy.card) console.log(JSON.stringify(copy.card, null, 2));
           return copy;
         };
 
@@ -167,7 +216,7 @@ function *Account({ json }) {
         endless.proceed = true;
         if (statuses.length < limit) endless.hasMore = false;
         await this.refresh();
-        //imageEvents();
+        imageEvents();
       });
   };
 
@@ -209,6 +258,12 @@ function *Account({ json }) {
     // <img src={ preview_url } title={ description } />
     return (
       <Fragment>
+        <div id="overlay" class="dn"></div>
+        <div id="overlayContent" class="fixed dn h-100 w-100 tl">
+          <img id="overlayImage" src="" alt=""
+            onclick={ hideImage }
+            class="ba bw1 br2 b--white b--solid pointer" />
+        </div>
         <div class={ wrapper_class } style={ wrapper_style }>
           <div class="pl4 pb4 pt3">
             <div class={ inner_class }>
@@ -225,7 +280,9 @@ function *Account({ json }) {
                       <div style={`background-image: url(${
                         preview_url });background-repeat:no-repeat`} 
                         class="cover h5 br1 br3-ns"
-                        title={ description } />
+                        data-src={preview_url}
+                        title={ description }
+                      />
                     </div>
                   ))}
                   <div class="cf" />
