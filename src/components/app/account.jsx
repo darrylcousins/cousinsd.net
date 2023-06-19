@@ -105,7 +105,6 @@ function *Account({ json }) {
   window.addEventListener("resize", imageEvents);
 
   const showImage = (ev) => {
-    console.log(ev.target.getAttribute("data-src"));
     document.querySelector("#overlayImage").setAttribute("src", ev.target.getAttribute("data-src"));
     document.querySelector("#overlayImage").setAttribute("title", "Close");
     document.querySelector("#overlay").classList.remove("dn");
