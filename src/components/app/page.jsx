@@ -272,6 +272,16 @@ ${ `${ fence }` }
           </a>
         </div>
         <Navigation pathname={ pathname } />
+
+        { pagetype !== "markdown" && (
+          <div>
+            <img src="stripes-global-trimmed.png"
+              title="https://showyourstripes.info"
+              class="outline-0"
+              alt="ShowYourStripes.info" />
+          </div>
+        )}
+
         <div class="cf"></div>
         { loading ? <BarLoader /> : <div class="bar-placeholder"></div> }
         <div id="page-content" role="main" class={ `markdown-body ${mode}-mode` }>
