@@ -3,7 +3,7 @@
 ## Description
 
 <div class="flex">
-<div class="w-30 contain dark" id="boxes-logo">
+<div class="w-30 contain dark mb3" id="boxes-logo">
 </div>
 <div class="w-70">
 
@@ -16,7 +16,7 @@ sell any type of widget in a box.
 </div>
 </div>
 
-<div class="horizontal-rule"></div>
+<div class="horizontal-rule mt3 mb4"></div>
 
 <div class="fl w-100 w-60-m w-70-l">
 
@@ -204,7 +204,7 @@ the admin. A weekly cron job removes boxes, orders, and logs older than 2 weeks
 and boxes and logs created in BoxesApp remain available in json formatted
 backup files).
 
-### Latest
+### Winter 2022
 
 With the release of Shopify's subscription api a number of third party apps
 have been created to work with the api. In particular [Recharge

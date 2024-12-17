@@ -106,7 +106,7 @@ function *Account({ json }) {
 
   const showImage = (ev) => {
     document.querySelector("#overlayImage").setAttribute("src", ev.target.getAttribute("data-src"));
-    document.querySelector("#overlayImage").setAttribute("title", "Close");
+    document.querySelector("#overlayImage").setAttribute("title", ev.target.getAttribute("title"));
     document.querySelector("#overlay").classList.remove("dn");
     document.querySelector("#overlay").classList.add("aspect-ratio--object", "db", "fixed");
     document.querySelector("#overlayContent").classList.remove("dn");
@@ -156,7 +156,6 @@ function *Account({ json }) {
       })
       .then((text) => {
         statuses = JSON.parse(text);
-        //console.log(JSON.stringify(statuses[0], null, 2));
         max_id = statuses.at(-1).id // last popped of the list
         // unused, keeping for debugging
         let page_count = Math.ceil(json.statuses_count/limit);
@@ -291,16 +290,20 @@ function *Account({ json }) {
                   <a href={ status.card.url } class="status-post-card w-100 ba flex h-3 br2 link"
                     style="color:inherit;border-color:#313543"
                     target="_blank" rel="noopener noreferrer">
-                    { status.card.image ? (
-                      <img src={ status.card.image } />
+                    { status.card.image && false ? (
+                      <img src={ status.card.image } title={ status.card.title } alt={ status.card.title } />
                     ) : (
+                      <Fragment>
                       <div class="pa3 br" style="color:inherit;border-color:#313543">
                         <DescriptionOutlinedIcon />
                       </div>
+                      <div class="status-post-link v-mid w-100 center pa2" style="color:#58a6ff">
+                        <div class="ma2">
+                        { status.card.title }
+                        </div>
+                      </div>
+                    </Fragment>
                     )}
-                    <div class="status-post-link dib v-mid w-100 center pa2">
-                      { status.card.title }
-                    </div>
                   </a>
               )}
             </div>

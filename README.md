@@ -1,9 +1,5 @@
 # cousinsd.net
 
-Kinda a shame that there are no install instrxuuctions.
-
-I should change that.
-
 Firstly 
 
 ```

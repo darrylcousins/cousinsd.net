@@ -87,7 +87,7 @@ function *Page() {
    * @method {Promise} pullAccount
    */
   const pullAccount = () => {
-    fetch(`./scripts/index`, {
+    fetch(`./scripts/index`, { // from ../../mastodon (scripts are nginx rewrite to folder)
       headers: {
         "Accept": "text/plain",
         "Cache-Control": "no-cache",
@@ -251,36 +251,56 @@ ${ `${ fence }` }
   while(true) {
     yield (
       <Fragment>
-        <div onclick={ (e) => toggleMode(mode === "dark" ? "light" : "dark") }
-          title={ `Switch to ${mode === "dark" ? "light" : "dark"} mode` }
-          class="pointer dib fl">
-          { mode === "dark" ? <LightModeIcon /> : <DarkModeIcon /> }
-        </div>
-        <div onclick={ (e) => showSource() }
-          title={ `${parsed ? "Show" : "Hide" } content source` }
-          class="pointer dib fl ml2">
-          <PreviewIcon />
-        </div>
-        <div class="pointer dib mt2 mh2 fr">
-          <a rel="me"
-            href="https://mastodon.nz/@cousinsd"
-            target="_blank" class="link outline-0 dim">
-            <img src="mastodon.png"
-              title="https://mastodon.nz@cousinsd.net"
-              class="outline-0"
-              alt="Mastodon logo" />
-          </a>
-        </div>
-        <Navigation pathname={ pathname } />
-
-        { pagetype !== "markdown" && (
-          <div>
-            <img src="stripes-global-trimmed.png"
-              title="https://showyourstripes.info"
-              class="outline-0"
-              alt="ShowYourStripes.info" />
+        <div class="cf w-100 db">
+          <div onclick={ (e) => toggleMode(mode === "dark" ? "light" : "dark") }
+            title={ `Switch to ${mode === "dark" ? "light" : "dark"} mode` }
+            class="pointer dib fl">
+            { mode === "dark" ? <LightModeIcon /> : <DarkModeIcon /> }
           </div>
-        )}
+          <div onclick={ (e) => showSource() }
+            title={ `${parsed ? "Show" : "Hide" } content source` }
+            class="pointer dib fl ml2">
+            <PreviewIcon />
+          </div>
+          <div class="pointer dib mt2 mh2 fr">
+            <a rel="me"
+              href="https://mastodon.nz/@cousinsd"
+              target="_blank" class="link outline-0 dim">
+              <img src="mastodon.png"
+                title="https://mastodon.nz@cousinsd.net"
+                class="outline-0"
+                alt="Mastodon logo" />
+            </a>
+          </div>
+          <Navigation pathname={ pathname } />
+        </div>
+
+        <div class="cf w-100 db">
+          <div class="w-10 fl pa0 ma0"
+            style="height: 25px;overflow: hidden">
+            <a
+              href="https://responsibleaidisclosure.com/"
+              title="RAID: Responsible Ai Disclosure">
+            <img src="no-ai.png"
+              class="outline-0"
+              style="height: 25px;"
+              height="25px"
+              alt="RAID: Responsible Ai Disclosure" />
+            </a>
+          </div>
+          <div class="w-90 fl pa0 ma0 tr"
+            style="height: 25px;overflow: hidden">
+            <a
+              href="https://showyourstripes.info"
+              title="ShowYourStripes">
+            <img src="stripes-global-trimmed.png"
+              title="ShowYourStripes"
+              class="outline-0"
+              style="overflow: none"
+              alt="ShowYourStripes" />
+            </a>
+          </div>
+        </div>
 
         <div class="cf"></div>
         { loading ? <BarLoader /> : <div class="bar-placeholder"></div> }
