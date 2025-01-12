@@ -1,5 +1,7 @@
 # env
 .env
+.well-known
+hold
 
 # Logs
 logs

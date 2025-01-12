@@ -17,6 +17,7 @@
 const process = require("node:process");
 const querystring = require('node:querystring');
 
+// no .env file - fix me??
 //const account = process.env["MASTODON_ACCOUNT"];
 const account = "109333323498794372";
 const endpoint = "";
