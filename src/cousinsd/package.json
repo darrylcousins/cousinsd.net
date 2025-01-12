@@ -1,0 +1,19 @@
+{
+  "name": "cousinsd",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Darryl Cousins <cousinsd@cousinsd.net>",
+  "license": "MIT",
+  "dependencies": {
+    "@inquirer/prompts": "^7.2.2",
+    "boxen": "^8.0.1",
+    "chalk": "^5.4.1",
+    "dotenv": "^16.4.7",
+    "mongodb": "^6.12.0",
+    "yargs": "^17.7.2"
+  }
+}
