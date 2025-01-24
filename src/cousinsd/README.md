@@ -1,3 +1,9 @@
+Permissions
+-----------
+
+Running fastcgi some files will need to have `www-data` as group and write or
+executed permissions added for the group, `logs/*` for example.
+
 Inbox checks
 ------------
 

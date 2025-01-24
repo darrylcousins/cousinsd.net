@@ -1,7 +1,9 @@
 # env
 .env
+.env.test
 .well-known
 hold
+dump
 
 # Logs
 logs

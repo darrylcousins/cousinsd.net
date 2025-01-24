@@ -1,22 +1,25 @@
 import fs from 'node:fs';
-import dotenv from 'dotenv';
-import { suite, test, before, after } from "node:test";
-import assert from "node:assert/strict";
+import { suite, test, before, after } from 'node:test';
+import assert from 'node:assert/strict';
 
 import Logger from '../lib/logger.js';
 
-dotenv.config();
-
 suite("Logger sanity tests", async () => {
+
   let logger;
-  let server;
+  let server = {};
+
   before(() => {
-    server = {
-      request_method: 'GET',
-      request_uri: 'cousinsd.net/cousinsd',
-      remote_addr: '222.222.222.222',
-      user_agent: 'node-test'
-    };
+    
+    for (let name in process.env) {
+      let value = process.env[name];
+      name = name.toLowerCase();
+      if (name.indexOf('http_') === 0) {
+        server[ name.substring('http_'.length) ] = value;
+      } else {
+        server[name] = value;
+      }
+    }
     logger = new Logger(server);
   });
 
@@ -24,14 +27,15 @@ suite("Logger sanity tests", async () => {
     logger.close(); // closes any open files
     fs.unlinkSync(`${logger.logPath}/access.log`);
     fs.unlinkSync(`${logger.logPath}/app.log`);
+    fs.unlinkSync(`${logger.logPath}/error.log`);
   });
 
   test('access string should contain request_method, request_uri, remote_addr, and user_agent as log prefix', () => {
-    assert.strictEqual(logger.access_string, ' GET cousinsd.net/cousinsd 222.222.222.222 node-test');
+    assert.strictEqual(logger.access_string, ' GET /cousinsd/index 222.222.222.222 node-test');
   });
 
   test('server string should contain only request_method, request_uri as log prefix', () => {
-    assert.strictEqual(logger.server_string, ' GET cousinsd.net/cousinsd');
+    assert.strictEqual(logger.server_string, ' GET /cousinsd/index');
   });
 
   test('should return NZ locale date time as log date string', () => {
@@ -43,10 +47,31 @@ suite("Logger sanity tests", async () => {
     logger.app(message);
     const data = fs.readFileSync(`${logger.logPath}/app.log`);
     const logString = data.toString();
-    console.log(logString);
     assert.match(logString, new RegExp(message));
     for (const key of ['request_method', 'request_uri']) {
       assert.match(logString, new RegExp(server[key]));
+    }
+  });
+
+  test('should log json object correctly to file', () => {
+    const message = { my: 'object', as: 'json'};
+    logger.app(message);
+    const data = fs.readFileSync(`${logger.logPath}/app.log`);
+    const logString = data.toString();
+    assert.match(logString, new RegExp(message));
+    for (const str of ['my', 'object']) {
+      assert.match(logString, new RegExp(str));
+    }
+  });
+
+  test('should log error object correctly to file', () => {
+    const message = new Error('my message');
+    logger.error(message);
+    const data = fs.readFileSync(`${logger.logPath}/error.log`);
+    const logString = data.toString();
+    assert.match(logString, new RegExp(message));
+    for (const str of [message, 'Error']) {
+      assert.match(logString, new RegExp(str));
     }
   });
 
@@ -54,8 +79,7 @@ suite("Logger sanity tests", async () => {
     logger.access();
     const data = fs.readFileSync(`${logger.logPath}/access.log`);
     const logString = data.toString();
-    console.log(logString);
-    for (const key of Object.keys(server)) {
+    for (const key of ['remote_addr', 'request_method']) {
       assert.match(logString, new RegExp(server[key]));
     }
   });

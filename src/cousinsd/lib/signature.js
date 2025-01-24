@@ -6,9 +6,9 @@ class Signature {
   }
 
   sign(strToSign, privateKey) {
+    console.log(strToSign);
     const signer = crypto.createSign('sha256');
     signer.update(strToSign);
-    // XXX Store and retrieve our private key
     const signed = signer.sign(privateKey);
 		signer.end();
     return signed.toString('base64'); // convert Buffer to base64 string
@@ -45,6 +45,7 @@ class Signature {
     const algorithm = Object.hasOwnProperty.call(fields, 'algorithm') ? fields.algorithm : 'sha256';
     const opts = { };
     
+    // 'headers' contains the list of fields used in the signature
     for (const header of fields.headers.split(' ')) {
       if (header === '(request-target)') {
         opts['(request-target)'] = `post ${path}`;
@@ -80,7 +81,8 @@ class Signature {
     };
     const strToSign = this.stringToSign(opts);
     const signed_b64 = this.sign(strToSign, privateKey);
-		const signature = `keyId="${keyId}",headers="${headerNames.join(' ')}",signature="${signed_b64}",algorithm="rsa-sha256"`;
+    //const signature = `keyId="${keyId}",headers="${headerNames.join(' ')}",signature="${signed_b64}",algorithm="rsa-sha256"`;
+		const signature = `keyId="${keyId}",headers="${headerNames.join(' ')}",signature="${signed_b64}"`;
 
     return {
       date,
