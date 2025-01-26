@@ -12,11 +12,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 suite("Signature sanity tests", async () => {
 
   before(() => {
-    console.log('suite start');
   });
 
   after(async () => {
-    console.log('suite end');
   });
 
   test('match the digest string', async () => {

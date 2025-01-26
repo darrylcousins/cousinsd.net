@@ -17,6 +17,10 @@ class Mongo {
     return await this.client.db().collection(collection).find(query, options).toArray();
   }
 
+  async updateOne(collection, query, doc) {
+    return await this.client.db().collection(collection).updateOne(query, doc);
+  }
+
   async insertOne(collection, doc) {
     return await this.client.db().collection(collection).insertOne(doc);
   }

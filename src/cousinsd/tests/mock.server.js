@@ -19,7 +19,7 @@ if (workerData.method === 'write') {
 }
 /* node:coverage enable */
 
-const server = new Server(process.env.DOMAIN, process.env.NAME, process.env.MONGO_URI);
+const server = new Server();
 
 const main = async () => {
   await server[workerData.method](workerData.data);

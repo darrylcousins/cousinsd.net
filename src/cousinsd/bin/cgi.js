@@ -4,7 +4,7 @@ import Server from '../lib/server.js';
 
 const main = async () => {
 
-  const server = new Server(process.env.DOMAIN, process.env.NAME, process.env.MONGO_URI);
+  const server = new Server();
   server.logger.access();
   try {
     await server.run();

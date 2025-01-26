@@ -17,21 +17,29 @@ class Server {
   host = null;
   actor = null;
   closed = false;
+  type = 'json';
 
-  constructor(domain, name, mongo_uri) {
-    this.domain = domain;
+  constructor(domain, name) {
+    this.domain = process.env.DOMAIN;
     this.host = `https://${this.domain}`;
-    this.actor = `${this.host}/${name}`;
+    this.actor = `${this.host}/${process.env.NAME}`;
     this.request = new Request();
     this.response = new Response();
-    this.mongo = new Mongo(mongo_uri);
+    this.mongo = new Mongo(process.env.MONGO_URI);
     this.signature = new Signature();
     this.logger = new Logger({ ...this.request.server, ...this.request.headers });
+    if (process.env['HTTP_ACCEPT'].includes('html')) {
+      this.content_type = 'html';
+    } else if (process.env['HTTP_ACCEPT'].includes('json')) {
+      this.content_type = 'json';
+    }
 
     /* node:coverage disable */
     if (parseInt(process.env.DEBUG) === 1) {
       for (let name in process.env) {
-        this.logger.app(`${name}: ${process.env[name]}`);
+        if (name.startsWith('HTTP')) {
+          this.logger.app(`${name}: ${process.env[name]}`);
+        }
       }
     }
     /* node:coverage enable */
@@ -56,45 +64,6 @@ class Server {
     await this.close('500 Server Error');
   }
 
-  /*
-  // TODO Not sending accept now, instead we store it for later acceptance
-  // TODO this goes into the accept routine
-  async accept({ actor, data, reqBody }) {
-    const guid = crypto.randomBytes(16).toString('hex');
-    const message = {
-      "@context": "https://www.w3.org/ns/activitystreams",
-      "id": `${this.actor}/messages/${guid}`,
-      "type": "Accept",
-      "actor": `${data.object}`,
-      "object": `${reqBody}`
-    }
-    const doc = { ...message, object: data, id: `${guid}` };
-    // save the message in full as a JSON object
-    // why? Surely we save the original Follow to 'inbox' for action later
-    // or just save it as a record of actions performed?
-    await this.mongo.insertOne('messages', doc);
-
-    // create signed headers and send accept message
-    const keys = await this.mongo.findOne('keys', {id: this.actor});
-    const headers = this.signature.headers({ 
-      inbox: actor.inbox,
-      reqBody: JSON.stringify(message),
-      privateKey: keys.privateKey,
-      keyId: keys.keyId
-    });
-    this.logger("HEADERS:");
-    this.logger(headers);
-    this.logger("END HEADERS:");
-    const result = await fetch(actor.inbox, {
-      headers,
-      method: 'POST',
-      accept: 'application/activity+json',
-      body: JSON.stringify(message)
-    }).then(response => response.json());
-    this.logger.app(result);
-  }
-  */
-
   async readBody(stream) {
     return new Promise((resolve, reject) => {
       let reqBody = '';
@@ -109,14 +78,12 @@ class Server {
 
   /* activitypub data should have @context,
    * should have a type attribute
-   * object should match our actor
    */
   verifyData(data) {
     if (!Object.keys(data).includes('@context')) return false
     if (!Object.keys(data).includes('type')) return false
     if (!Object.keys(data).includes('object')) return false
     if (!Object.keys(data).includes('actor')) return false
-    if (data.object !== this.actor) return false;
     return true;
   }
 
@@ -128,9 +95,13 @@ class Server {
     }
     switch (this.request.filename) {
       case 'index':
+        let opts = { actor: this.actor, mongo: this.mongo };
+        /*
         this.response.write(await this.mongo.findOne('actors', {
           id: this.actor
         }));
+        */
+        await import('../routes/index.js').then(async ({ default: fn }) => await fn(this.request, this.response, opts));
         this.close(); 
         break;
       case 'profile':

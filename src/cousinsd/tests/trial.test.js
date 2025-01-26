@@ -18,12 +18,13 @@ const main = async () => {
   const domain = process.env.DOMAIN;
   const name = process.env.NAME;
   const host = `https://${domain}`;
-  const actor = `${host}/${name}`;
-  const keyId = `${actor}/publicKey`;
-  const keys = await mongo.findOne("keys", {id: actor});
+  const username = `${host}/${name}`;
+  const keyId = `${username}/publicKey`;
+  const keys = await mongo.findOne("keys", {id: username});
+  const actor = await mongo.findOne("actors", {id: username});
   const signature = new Signature();
   const reqBody = "{'bleh': 'blah'}";
-  const inbox = `${actor}/inbox`;
+  const inbox = `${username}/inbox`;
   //const sig = signature.sign(reqBody);
   const headers = signature.headers({ inbox, reqBody, privateKey: keys.privateKey, keyId });
   //console.log(headers);
@@ -43,7 +44,7 @@ const main = async () => {
   logger.access();
   logger.app({ inbox, reqBody, headers, publicKey: keys.publicKey });
   const path = '/cousinsd/inbox';
-  assert.ok(signature.validate({ path, reqBody, headers, publicKey: keys.publicKey }));
+  assert.ok(signature.validate({ path, reqBody, headers, publicKey: actor.publicKey.publicKeyPem }));
 
   await mongo.close();
 }

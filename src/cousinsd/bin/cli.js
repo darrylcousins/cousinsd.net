@@ -111,10 +111,21 @@ ${dateFormat.format(el.inserted)} \
         try {
           result = await response.json();
         } catch(e) {
+          // we can ignore this as they may not send data back
           console.log(response);
         }
       }
-      console.log(result);
+      if (result) {
+        console.log(result);
+        // this may be an error, eg unable to verify signature so store somewhere
+      } else {
+        // store the success somewhere
+      }
+      if (response.status === 202) { // accepted
+        // store as followed
+      } else {
+        // bugger I've been rejected, possibly it would have json info else just store the status and statusText
+      }
       break;
     case 'Reject':
       // delete the inbox entry
