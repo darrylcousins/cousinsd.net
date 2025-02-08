@@ -1,6 +1,5 @@
 import { suite, test, before, after } from "node:test";
 import assert from "node:assert/strict";
-
 import Mongo from '../lib/mongo.js';
 
 suite("Mongo sanity tests", async () => {

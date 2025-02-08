@@ -41,6 +41,8 @@ Running test mode
 
 Request uri at the very least required:
 
+Update: now using `.env.test`
+
 ```
 REQUEST_URI='somedomain/test' node index.js
 ```

@@ -6,9 +6,17 @@ class Response {
   constructor() {
     this.headers = {
       'status': '200 OK',
-      'content-type': 'application/activity+json',
+      'content-type': 'application/json',
       'pragma': 'no-cache'
     };
+  }
+
+  setStatus(status) {
+    this.headers['status'] = status;
+  }
+
+  setContentType(content_type) {
+    this.headers['content-type'] = content_type;
   }
 
   sendHeaders() {

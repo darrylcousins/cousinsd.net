@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node --import ./tests/setup.js --test",
     "coverage": "node --import ./tests/setup.js --test --experimental-test-coverage",
-    "filtered": "node --import ./tests/setup.js --test tests/server.test.js"
+    "filtered": "node --import ./tests/setup.js --test tests/empty.test.js"
   },
   "author": "Darryl Cousins <cousinsd@cousinsd.net>",
   "license": "MIT",
@@ -16,6 +16,7 @@
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
     "mongodb": "^6.12.0",
+    "socket.io": "^4.8.1",
     "undici": "^7.3.0",
     "yargs": "^17.7.2"
   }

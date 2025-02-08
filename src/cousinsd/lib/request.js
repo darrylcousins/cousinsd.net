@@ -7,7 +7,7 @@ class Request {
   httpVersion = null;
   filename = '';
   query = {};
-  server = {};
+  env = {};
   headers = {};
   cookies = {};
   form = {};
@@ -22,23 +22,23 @@ class Request {
     for (let name in server_env) {
       let value = server_env[name];
       name = name.toLowerCase();
-      // If starts with http then remove 'http_' and add it to the http header array, otherwise add it to the server array.
+      // If starts with http then remove 'http_' and add it to the http header array, otherwise add it to the env array.
       if (name.indexOf('http_') === 0) {
         this.headers[ name.substring('http_'.length) ] = value;
       } else {
-        this.server[name] = value;
+        this.env[name] = value;
       }
     }
 
-    this.method = this.server.request_method;
-    this.httpVersion = this.server.server_protocol;
+    this.method = this.env.request_method;
+    this.httpVersion = this.env.server_protocol;
 
-    this.server.content_type ??= '';
-    this.headers.content_type = this.server.content_type;
-    this.server.content_length ??= 0;
-    this.headers.content_length = parseInt(this.server.content_length);
+    this.env.content_type ??= '';
+    this.headers.content_type = this.env.content_type;
+    this.env.content_length ??= 0;
+    this.headers.content_length = parseInt(this.env.content_length);
 
-    this.url = url.parse(this.server.request_uri, true);
+    this.url = url.parse(this.env.request_uri, true);
     this.query = this.url.query;
 
     const parts  = this.url.pathname.split('/');

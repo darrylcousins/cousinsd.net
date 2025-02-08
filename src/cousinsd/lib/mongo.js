@@ -1,5 +1,5 @@
 
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 class Mongo {
 
@@ -10,6 +10,9 @@ class Mongo {
   }
 
   async findOne(collection, query, options) {
+    if (Object.hasOwnProperty.call(query, '_id')) {
+      query._id = new ObjectId(query._id);
+    }
     return await this.client.db().collection(collection).findOne(query, options);
   }
 
@@ -18,11 +21,18 @@ class Mongo {
   }
 
   async updateOne(collection, query, doc) {
-    return await this.client.db().collection(collection).updateOne(query, doc);
+    if (Object.hasOwnProperty.call(query, '_id')) {
+      query._id = new ObjectId(query._id);
+    }
+    return await this.client.db().collection(collection).updateOne(query, doc, { upsert: true });
   }
 
   async insertOne(collection, doc) {
     return await this.client.db().collection(collection).insertOne(doc);
+  }
+
+  async deleteOne(collection, query) {
+    return await this.client.db().collection(collection).deleteOne(query);
   }
 
   async close() {

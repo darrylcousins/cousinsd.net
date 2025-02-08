@@ -68,6 +68,10 @@ class Logger {
     fs.appendFileSync(this.fileHandles[f], line);
   }
 
+  quic(msg) {
+    this.logToFile(msg, 'quic');
+  }
+
   app(msg) {
     this.logToFile(msg, 'app');
   }

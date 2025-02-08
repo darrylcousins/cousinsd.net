@@ -35,7 +35,7 @@ const main = async () => {
 
   console.log(chalk.white.bold(`Hello ${options.name}\n`));
 
-  const actor = await mongo.findOne('actors', { preferredUsername: options.name });
+  const actor = await mongo.findOne('actor', { preferredUsername: options.name });
 
   let items;
   items = await mongo.findMany('inbox', {

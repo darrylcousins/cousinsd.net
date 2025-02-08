@@ -1,9 +1,3 @@
-
-import Mongo from '../lib/mongo.js';
-
-export default async (req, res, opts) => {
-  const { actor, mongo } = opts;
-  res.write(await mongo.findOne('actors', {
-    id: actor
-  }));
+export default (data) => {
+  return `<p>Bleh</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
 }

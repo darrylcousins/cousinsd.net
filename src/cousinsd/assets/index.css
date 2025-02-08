@@ -19,10 +19,30 @@ html {
 }
 html, body { margin: 0; padding: 0; height: 100%; }
 
+/* main content block */
 main {
   /* transition opacity on document load */
   opacity: 0;
   transition: opacity 2s;
+}
+
+/* header content block */
+header {
+  /* transition opacity on document load */
+  opacity: 0;
+  transition: opacity 2s;
+}
+
+/* nav content block */
+nav {
+}
+
+.content {
+}
+
+/* for toggling visibility on load */
+.visible {
+  opacity: 1;
 }
 
 svg {
@@ -34,9 +54,10 @@ svg.rotate {
   transform-origin: 50% 70%;
 }
 
-/* main content block */
-.content {
-  margin-top: 3em;
+.code {
+  font-family: Consolas,monaco,monospace;
+  white-space: pre;
+
 }
 
 /* for centering elements */
@@ -52,15 +73,10 @@ svg.rotate {
   border-radius: .5em;
 }
 
-/* for toggling visibility on load */
-.visible {
-  opacity: 1;
-}
-
 /* collapse animation */
 .collapsible {
   overflow:hidden;
-  transition: height 0.8s ease-out;
+  transition: height 1.2s ease-out;
   height:auto;
 }
 .fade {
@@ -68,3 +84,6 @@ svg.rotate {
   opacity: 0;
 }
 /* end collapse animation */
+
+/* finally remove the overlay */
+#loadOverlay { display: none }

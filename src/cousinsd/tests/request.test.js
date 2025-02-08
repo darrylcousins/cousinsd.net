@@ -9,11 +9,9 @@ suite("Request sanity tests", async () => {
 
   before(() => {
     request = new Request();
-    console.log('suite start');
   });
 
   after(async () => {
-    console.log('suite end');
   });
 
   test('env values should be in either headers or server objects', async () => {
@@ -24,7 +22,7 @@ suite("Request sanity tests", async () => {
         name = name.substring('http_'.length);
         assert.ok(Object.keys(request.headers).includes(name));
       } else {
-        assert.ok(Object.keys(request.server).includes(name));
+        assert.ok(Object.keys(request.env).includes(name));
       }
     }
   });

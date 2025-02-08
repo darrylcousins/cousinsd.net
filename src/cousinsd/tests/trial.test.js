@@ -21,7 +21,7 @@ const main = async () => {
   const username = `${host}/${name}`;
   const keyId = `${username}/publicKey`;
   const keys = await mongo.findOne("keys", {id: username});
-  const actor = await mongo.findOne("actors", {id: username});
+  const actor = await mongo.findOne("actor", {id: username});
   const signature = new Signature();
   const reqBody = "{'bleh': 'blah'}";
   const inbox = `${username}/inbox`;
