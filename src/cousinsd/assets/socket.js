@@ -1,5 +1,5 @@
 import { io } from "https://cdn.socket.io/4.8.1/socket.io.esm.min.js";
-import { collapseElement, expandElement } from "/cousinsd/animator.js";
+import { collapseElement, expandElement } from "./animator.js";
 
 let objectId;
 let feedback;
@@ -18,33 +18,52 @@ const appendMessage = (message, colour) => {
 }
 
 export const IOConnect = async (opts) => {
-  const { action, type, id, token, data } = opts;
+  const { id, token, data } = opts;
   objectId = id;
   const actionEl = document.querySelector(`#action-${objectId}`);
   feedback = document.querySelector(`#feedback-${objectId}`);
+  appendMessage('Making connection to server ...', 'blue');
+  expandElement(actionEl);
 
   const socket = io({
     transports: ["websocket"],
     auth: { token },
+    reconnection: false,
   });
 
   socket.on('connect', () => {
     appendMessage('Connected ... sending data:', 'green');
     appendMessage(JSON.stringify({ ...data, object: '{ ... }'}, null, 2));
 
+    socket.emit('data_request', data, (response) => {
+      appendMessage(response, 'blue');
+    });
+    expandElement(actionEl);
+    /*
     expandElement(actionEl, () => {
       socket.emit('data_request', data, (response) => {
         appendMessage(response, 'blue');
       });
     });
+    */
 
+  });
+
+  socket.on('data_progress', (message) => {
+    appendMessage(message, 'blue');
+  });
+
+  socket.on('data_plain', (message) => {
+    appendMessage(message);
   });
 
   socket.on('data_success', (message) => {
     appendMessage(message, 'green');
     const close = document.querySelector(`#response-${objectId}-${err}`);
     err = 'false';
-    close.id = `response-${objectId}-${err}`;
+    if (close) { // dom object could be gone by now
+      close.id = `response-${objectId}-${err}`;
+    }
   });
 
   socket.on('data_failure', (message) => {

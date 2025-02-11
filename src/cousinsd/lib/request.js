@@ -1,4 +1,10 @@
+import fs from 'node:fs';
 import url from 'node:url';
+
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 class Request {
 
@@ -15,7 +21,7 @@ class Request {
 
   constructor(env) {
 
-    env ??= {}; // can be used to override process.env values
+    if (!env) env = {};
 
     const server_env = { ...process.env, ...env };
 

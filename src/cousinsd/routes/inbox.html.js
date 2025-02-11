@@ -18,6 +18,8 @@ const createButton = (content, style, id, type, index) => {
     class="${classes}" title="${content}" type="button">${content}</button>`;
 }
 
+
+// build the body of the document
 export default (doc) => {
   let result = '';
   for (let [index, message] of doc.entries()) {
@@ -26,7 +28,7 @@ export default (doc) => {
     result += `
       <div id="wrapper-${id}" class="mb4 collapsible" data-collapsed="false">
         <div class="orange bt pt2 mt3">${inserted}</div>
-        ${data.type === 'Follow' ? createButton('Accept', 'green', id, data.type, index) : ''}
+        ${['Follow', 'Undo'].includes(data.type) ? createButton('Accept', 'green', id, data.type, index) : ''}
         ${createButton('Ignore', 'gold', id, data.type, index)}
         <div class="mb1 cf"></div>
         <div class="mb3">

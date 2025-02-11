@@ -11,7 +11,7 @@ export default async (req, res, opts) => {
   let data;
   let body;
 
-  if (filename === 'index' || filename === '') {
+  if (filename === 'index' || filename === 'home' || filename === '') {
     data = await mongo.findOne('actor', { id: actor })
   } else if (['inbox', 'outbox', 'messages'].includes(filename)) {
     data = await mongo.findMany(filename, {})

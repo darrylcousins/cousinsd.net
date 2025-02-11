@@ -6,6 +6,11 @@ import Signature from '../lib/signature.js';
 import Request from './request.js';
 import Response from './response.js';
 
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 class Server {
 
   request = null;
@@ -27,14 +32,24 @@ class Server {
     this.mongo = new Mongo(process.env.MONGO_URI);
     this.signature = new Signature();
     this.logger = new Logger({ ...this.request.server, ...this.request.headers });
-    if (this.request.headers.accept.includes('html')) {
+    fs.writeFileSync(join(__dirname, '../logs/wtf.log'), JSON.stringify(this.request.headers, null, 2));
+
+    // decide on content type
+    let type;
+    // could use this.request.method?
+    if (Object.hasOwnProperty.call(this.request.headers, 'accept')) {
+      type = this.request.headers.accept; // GET requests
+    } else if (Object.hasOwnProperty.call(this.request.headers, 'accept')) {
+      type = this.request.headers.content_type; // POST requests
+    } else {
+      type = 'json'; // a reasonable default
+    }
+    if (type.includes('html')) {
       this.response.setContentType('text/html; charset=utf-8');
       this.content_type = 'html';
-    } else if (this.request.headers.accept.includes('json')) {
-      this.response.setContentType('application/json');
+    } else if (type.includes('json')) {
+      this.response.setContentType('application/activity+json');
       this.content_type = 'json';
-    } else {
-      // XXX if no accept header then reject request!
     }
 
     /* node:coverage disable */
@@ -109,7 +124,6 @@ class Server {
   }
 
   async run() {
-    this.logger.app(`running ${this.request.filename}`);
     const match = this.request.filename.match(/\.(js|css)$/) ;
     if (Boolean(match)) {
       let filetype;
@@ -122,6 +136,9 @@ class Server {
       this.response.write(fs.readFileSync(`${process.env.ASSETS_PATH}/${this.request.filename}`, { encoding: 'utf8', flag: 'r' }));
       this.close();
       return;
+    } else {
+      // only log activities
+      this.logger.app(`running ${this.request.method} ${this.request.filename}`);
     }
     if (this.request.filename !== 'inbox' && this.request.method !== 'GET') {
       this.close('400 Bad Request - Wrong Method');
@@ -130,7 +147,7 @@ class Server {
     let opts = {
       actor: this.actor,
       mongo: this.mongo,
-      filename: this.request.filename,
+      filename: this.request.filename === '' && this.content_type === 'html' ? 'home' : this.request.filename,
       content_type: this.content_type
     };
 
@@ -236,6 +253,9 @@ class Server {
           // once validation has passed then store and message self that something needs action
           // for follows we need to send accept
           // for creates then that needs to be worked out
+          // not all types needs this storage
+          // a follow request does
+          // an accept does not etc
           try {
             await this.mongo.insertOne('inbox', {
               actor: {id: actor.id, inbox: actor.inbox },

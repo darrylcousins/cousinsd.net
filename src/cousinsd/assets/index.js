@@ -1,16 +1,17 @@
-import { IOConnect } from '/cousinsd/socket.js';
-import { collapseElement, expandElement } from '/cousinsd/animator.js';
-import { performAction } from '/cousinsd/action.js';
+import { IOConnect } from './socket.js';
+import { collapseElement, expandElement } from './animator.js';
+import { performAction } from './action.js';
+import { performSearch } from './search.js';
 
 let token;
 
-const app = async () => {
+const initHome = async () => {
+  console.log('init homw?');
+  const el = document.querySelector('#searchButton');
+  el.addEventListener('click', performSearch);
+}
 
-  // finally, show the content
-  document.querySelectorAll('.content').forEach((el) => {
-    el.classList.toggle('dn');
-  });
-
+const initInbox = async () => {
   // find the buttons and attach event listener
   document.querySelectorAll('button').forEach((el, idx) => {
     el.addEventListener('click', performAction);
@@ -38,6 +39,25 @@ const app = async () => {
     });
   });
 
+}
+
+const app = async () => {
+
+  // show the content
+  document.querySelectorAll('.content').forEach((el) => {
+    el.classList.toggle('dn');
+  });
+
+  console.log(window.location.pathname);
+  const pathnameParts = window.location.pathname.split('/');
+  console.log(pathnameParts);
+  const filename = pathnameParts[pathnameParts.length - 1];
+  if (filename === 'inbox') {
+    await initInbox();
+  } else if (filename === '') {
+    await initHome();
+  }
+
   // find the token
   const tokenElement = document.querySelector('token');
   token = tokenElement.getAttribute('value');
@@ -47,7 +67,7 @@ const app = async () => {
     document.querySelectorAll('.content').forEach((el) => {
       el.classList.toggle('visible');
     });
-  }, 500);
+  }, 200);
 
 }
 

@@ -11,6 +11,7 @@ const html = ({title, body, guid}) => `<!DOCTYPE html>
   <header class="content dn">
     <nav class="dt w-100 tr pr5"> 
       <div class="dtc v-mid tr pa3">
+      <a class="f6 fw4 hover-white no-underline white-70 dib pv2 ph3" href="/cousinsd/">home</a> 
       <a class="f6 fw4 hover-white no-underline white-70 dib pv2 ph3" href="/cousinsd/inbox">inbox</a> 
       <a class="f6 fw4 hover-white no-underline white-70 div pv2 ph3" href="/cousinsd/outbox">outbox</a> 
       <a class="f6 fw4 hover-white no-underline white-70 dib pv2 ph3" href="/cousinsd/index">index</a> 

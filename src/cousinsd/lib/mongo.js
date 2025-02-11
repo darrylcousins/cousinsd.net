@@ -32,6 +32,9 @@ class Mongo {
   }
 
   async deleteOne(collection, query) {
+    if (Object.hasOwnProperty.call(query, '_id')) {
+      query._id = new ObjectId(query._id);
+    }
     return await this.client.db().collection(collection).deleteOne(query);
   }
 

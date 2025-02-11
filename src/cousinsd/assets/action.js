@@ -1,5 +1,5 @@
-import { IOConnect } from "/cousinsd/socket.js";
-import { collapseElement, expandElement } from "/cousinsd/animator.js";
+import { IOConnect } from "./socket.js";
+import { collapseElement, expandElement } from "./animator.js";
 
 const closeResponse = async (event) => {
   const el = event.target;
@@ -45,6 +45,6 @@ export const performAction = async (event) => {
   const close = document.querySelector(`#response-${id}-false`);
   close.addEventListener('click', closeResponse);
 
-  const opts = { action, type, id, token, data };
+  const opts = { id, token, data };
   IOConnect(opts);
 }

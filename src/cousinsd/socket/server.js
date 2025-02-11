@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { dirname, resolve, join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -22,12 +22,21 @@ io.on('connection', (socket) => {
   console.log('connected');
 
   socket.on('data_request', async (data, callback) => {
-    console.log(data); // the data
+
     callback('Data received ... processing ...');
+
+    const cb = (message, plain) => {
+      if (plain) {
+        socket.emit("data_plain", message);
+      } else {
+        socket.emit("data_progress", message);
+      }
+    }
+
     let result;
     if (fs.existsSync(join(__dirname, `${data.type.toLowerCase()}.js`))) {
       result = await import(join(__dirname, `${data.type.toLowerCase()}.js`))
-        .then(async ({ default: fn }) => await fn({data, mongo}));
+        .then(async ({ default: fn }) => await fn({data, mongo, cb}));
     }
     if (!result) {
       socket.emit("data_failure", "Activity type unknown");
@@ -39,21 +48,6 @@ io.on('connection', (socket) => {
     setTimeout(() => {
       socket.disconnect(true);
     }, 1000);
-    /*
-    let object;
-    switch(data.type) {
-      case 'Accept':
-        // accept the follow request
-        object = await mongo.findOne('inbox', {_id: data.id});
-        socket.emit("data_success", "Accept request received");
-      case 'Ignore':
-        // remove the inbox item
-        //await this.mongo.deleteOne('inbox', {id: data.id});
-        object = await mongo.findOne('inbox', {_id: data.id});
-        socket.emit("data_success", "Ignore request received");
-    }
-    console.log("object", object);
-    */
   });
 
 });

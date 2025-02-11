@@ -49,7 +49,7 @@ suite("Server path tests", async () => {
     const obj = JSON.parse(parts[1]);
     assert.strictEqual(obj.id, actor);
     const headers = headerStringToObject(parts[0].split('\n'));
-    assert.match(headers['content-type'], new RegExp(`application/json`));
+    assert.match(headers['content-type'], new RegExp(`json`));
   });
 
   test('calling run on filepath index for html content', async () => {
