@@ -87,7 +87,7 @@ function *Page() {
    * @method {Promise} pullAccount
    */
   const pullAccount = () => {
-    fetch(`./scripts/index`, { // from ../../mastodon (scripts are nginx rewrite to folder)
+    fetch(`/scripts/index`, { // from ../../mastodon (scripts are nginx rewrite to folder)
       headers: {
         "Accept": "text/plain",
         "Cache-Control": "no-cache",
@@ -116,7 +116,7 @@ function *Page() {
    * @method {Promise} pullPage
    */
   const pullPage = (pathname) => {
-    fetch(`.${pathname}.md`, {
+    fetch(`${pathname}.md`, {
       headers: {
         "Accept": "text/markdown",
         "Cache-Control": "no-cache",
@@ -139,7 +139,7 @@ function *Page() {
         parsed = true; // always start with parsed html
       }).catch((err) => {
         html = `
-        <h1>${err.message}</h1>
+        <h1>${err.name} ${err.message}</h1>
         `;
       }).finally(async () => {
         // animate this
@@ -266,8 +266,8 @@ ${ `${ fence }` }
             <a rel="me"
               href="https://mastodon.nz/@cousinsd"
               target="_blank" class="link outline-0 dim">
-              <img src="mastodon.png"
-                title="https://mastodon.nz@cousinsd.net"
+            <img src="/mastodon.png"
+                title="https://mastodon.nz@cousinsd"
                 class="outline-0"
                 alt="Mastodon logo" />
             </a>
@@ -281,7 +281,7 @@ ${ `${ fence }` }
             <a
               href="https://responsibleaidisclosure.com/"
               title="RAID: Responsible Ai Disclosure">
-            <img src="no-ai.png"
+            <img src="/no-ai.png"
               class="outline-0"
               style="height: 25px;"
               height="25px"
@@ -293,7 +293,7 @@ ${ `${ fence }` }
             <a
               href="https://showyourstripes.info"
               title="ShowYourStripes">
-            <img src="stripes-global-trimmed.png"
+            <img src="/stripes-global-trimmed.png"
               title="ShowYourStripes"
               class="outline-0"
               style="overflow: none"
@@ -319,9 +319,9 @@ ${ `${ fence }` }
           Darryl Cousins
           <span class="ml1">&lt;
             <a class="link dim"
-              href="mailto:cousinsd@proton.me"
-              title="cousinsd@proton.me">
-              cousinsd@proton.me
+              href="mailto:cousinsd@cousinsd.net"
+              title="cousinsd@cousinsd.net">
+              cousinsd@cousinsd.net
             </a>&gt;
           </span>
         </footer>

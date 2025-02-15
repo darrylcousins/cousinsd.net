@@ -33,7 +33,7 @@ function *Navigation({ pathname }) {
    * Promise fetching navigation json definition
    * @member {Promise} pull
    */
-  const pull = fetch(`./navigation.json`, {headers: {'Accept': 'application/json'}})
+  const pull = fetch(`/navigation.json`, {headers: {'Accept': 'application/json'}})
     .then((res) => {
       if (!res.ok) {
         throw new Error(`${res.status} (${res.statusText})`);

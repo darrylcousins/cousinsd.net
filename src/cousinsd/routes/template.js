@@ -1,5 +1,5 @@
 
-const html = ({title, body, guid}) => `<!DOCTYPE html>
+const html = ({title, body, guid, env}) => `<!DOCTYPE html>
 <html lang="en">
 <title>${title}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,8 +11,10 @@ const html = ({title, body, guid}) => `<!DOCTYPE html>
   <header class="content dn">
     <nav class="dt w-100 tr pr5"> 
       <div class="dtc v-mid tr pa3">
+      ${env.remote_addr === env.authip && `
       <a class="f6 fw4 hover-white no-underline white-70 dib pv2 ph3" href="/cousinsd/">home</a> 
       <a class="f6 fw4 hover-white no-underline white-70 dib pv2 ph3" href="/cousinsd/inbox">inbox</a> 
+      `}
       <a class="f6 fw4 hover-white no-underline white-70 div pv2 ph3" href="/cousinsd/outbox">outbox</a> 
       <a class="f6 fw4 hover-white no-underline white-70 dib pv2 ph3" href="/cousinsd/index">index</a> 
       <a class="f6 fw4 hover-white no-underline white-70 dib pv2 ph3" href="/cousinsd/profile">profile</a> 
@@ -24,6 +26,7 @@ const html = ({title, body, guid}) => `<!DOCTYPE html>
   <main class="content mh5 dn">
     ${title ? `<h1>${title}</h1>` : ''}
     ${body}
+    <div class="mt5 fr">${env.remote_addr}</div>
   </main>
   <script type="module" crossorigin src="/cousinsd/index.js"></script>
   <token value="${guid}"></token>

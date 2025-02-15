@@ -25,9 +25,11 @@ io.on('connection', (socket) => {
 
     callback('Data received ... processing ...');
 
-    const cb = (message, plain) => {
+    const cb = (message, plain, final) => {
       if (plain) {
         socket.emit("data_plain", message);
+      } else if (final) {
+        socket.emit("data_complete", message);
       } else {
         socket.emit("data_progress", message);
       }

@@ -1,6 +1,6 @@
 
 // from https://css-tricks.com/using-css-transitions-auto-dimensions/
-export const collapseElement = (element) => {
+export const collapseElement = (element, callback) => {
   const sectionHeight = element.scrollHeight;
   //const elementTransition = element.style.transition; // always an empty string
   //console.log(element.style.transition);
@@ -11,6 +11,13 @@ export const collapseElement = (element) => {
     //element.style.transition = elementTransition;
     requestAnimationFrame(() => element.style.height = 0 + 'px');
   });
+  const end = () => {
+    element.removeEventListener('transitionend', end);
+    if (callback) {
+      callback();
+    }
+  }
+  element.addEventListener('transitionend', end);
   element.setAttribute('data-collapsed', 'true');
 }
 

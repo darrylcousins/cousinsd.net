@@ -18,41 +18,64 @@ export default async ({ data, mongo, cb }) => {
 
   const fetchOpts = {
     method: 'GET',
-    accept: 'application/activity+json',
+    headers: {
+      'Accept': `application/ld+json; profile="https://www.w3.org/ns/activitystreams"`
+    }
   }
 
-  const fingerUrl = `https://${domain}/.well-known/webfinger?resource=acct:${username}@${domain}`;
+  const fingerUrl = `https://${domain.trim()}/.well-known/webfinger?resource=acct:${username.trim()}@${domain.trim()}`;
   cb(`Fetching ${fingerUrl}`);
-  const finger = await fetch(fingerUrl, fetchOpts).then(res => {
-    return res.json();
-  });
+  let finger;
+  try {
+    finger = await fetch(fingerUrl, fetchOpts).then(res => {
+      return res.json();
+    });
+  } catch(e) {
+    return { error: true, message: e.message };
+  }
   cb(JSON.stringify(finger, null, 2), 'plain');
   // if response
-  const actorUrl = finger.links[0].href;
+  let actorUrl;
+  for (const item of finger.links) {
+    if (item.rel === 'self' && item.type.includes('json')) { // could be ld+json or activity+json
+      actorUrl = item.href;
+    }
+  }
+  if (!actorUrl) {
+    return { error: true, message: 'Unable to determine url for actor data' };
+  }
   cb(`Fetching ${actorUrl}`);
-  const actor = await fetch(actorUrl, fetchOpts).then(res => {
-    return res.json();
-  });
-  let following;
-  let followers;
+  let actor;
+  try {
+    actor = await fetch(actorUrl, fetchOpts).then(res => {
+      return res.json();
+    });
+  } catch(e) {
+    return { error: true, message: e.message };
+  }
   //cb(JSON.stringify(actor, null, 2), 'plain');
   cb('Found actor ...');
-  if (actor.hasOwnProperty('following')) {
-    following = await fetch(actor.following, fetchOpts).then(res => {
-      return res.json();
-    });
-    cb('Actor follows:');
-    cb(JSON.stringify(following, null, 2), 'plain');
-  }
-  if (actor.hasOwnProperty('followers')) {
-    followers = await fetch(actor.followers, fetchOpts).then(res => {
-      return res.json();
-    });
-    cb('Actor is followed:');
-    cb(JSON.stringify(followers, null, 2), 'plain');
-  }
-  
-
+  const counts = {};
+  for await (const attr of ['following', 'followers', 'outbox']) {
+    if (actor.hasOwnProperty(attr)) {
+      cb(`Fetching ${actor[attr]}`);
+      const result = await fetch(actor[attr], fetchOpts).then(res => {
+        return res.json();
+      });
+      counts[attr] = result.totalItems;
+      cb(`Returned ${attr}:`);
+      cb(JSON.stringify(result, null, 2), 'plain');
+    }
+  };
+  cb(JSON.stringify({
+    preferredUsername: actor.preferredUsername,
+    icon: actor.icon,
+    name: actor.name,
+    url: actor.url,
+    id: actor.id,
+    followingCount: counts.following,
+    followersCount: counts.followers,
+  }, null, 2), null, true);
   return {
     error: null,
     message: 'Done here for now',

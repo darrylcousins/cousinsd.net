@@ -20,7 +20,7 @@ const createButton = (content, style, id, type, index) => {
 
 
 // build the body of the document
-export default (doc) => {
+export default (req, res, doc) => {
   let result = '';
   for (let [index, message] of doc.entries()) {
     const { _id, actor, data, inserted } = message;

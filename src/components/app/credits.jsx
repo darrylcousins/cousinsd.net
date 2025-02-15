@@ -58,7 +58,7 @@ function *Credits({ mode }) {
   };
 
   const pullContent = () => {
-    fetch("credits.md", {headers: {'Accept': 'text/markdown'}})
+    fetch("/credits.md", {headers: {'Accept': 'text/markdown'}})
       .then((res) => {
         if (!res.ok) {
           throw new Error(`${res.status} (${res.statusText})`);

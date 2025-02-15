@@ -29,6 +29,7 @@ class Server {
     this.actor = `${this.host}/${process.env.NAME}`;
     this.request = new Request();
     this.response = new Response();
+  
     this.mongo = new Mongo(process.env.MONGO_URI);
     this.signature = new Signature();
     this.logger = new Logger({ ...this.request.server, ...this.request.headers });
@@ -57,9 +58,15 @@ class Server {
       for (let name in process.env) {
         if (name.startsWith('HTTP')) {
           this.logger.app(`${name}: ${process.env[name]}`);
+        } else {
+          this.logger.app(`${name}: ${process.env[name]}`);
         }
       }
+      for (let name in this.request.env) { // this.request.headers
+        this.logger.app(`${name}: ${this.request.env[name]}`);
+      }
     }
+
     /* node:coverage enable */
     this.logger.app('Server constructor has run');
   }

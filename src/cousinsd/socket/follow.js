@@ -5,7 +5,7 @@ export default async ({ data, mongo, cb }) => {
   const signature = new Signature();
   const actor = await mongo.findOne('actor', { preferredUsername: process.env.NAME });
   cb('Fetching actor');
-  data.actor = await fetch(data.actor, {
+  data.actor = await fetch(data.id, {
     method: 'GET',
     headers: {
       accept: 'application/activity+json'
@@ -26,9 +26,9 @@ export default async ({ data, mongo, cb }) => {
   const message = {
     '@context': 'https://www.w3.org/ns/activitystreams',
     id: `${actor.id}/messages/${_id.toString()}`,
-    type: 'Accept',
-    actor: `${actor.id}`,
-    object: data, // ?
+    type: "Follow",
+    actor: `${data.actor.id}`,
+    object: `${actor.id}`, // yes me
   }
   const reqBody = JSON.stringify(message);
 
@@ -36,7 +36,6 @@ export default async ({ data, mongo, cb }) => {
   message.inserted = new Date();
   message.updated = new Date();
   await mongo.insertOne('messages', message);
-
   // create signed headers and send accept message
   const keys = await mongo.findOne('keys', {id: actor.id});
   const headers = signature.headers({ 
@@ -51,15 +50,14 @@ export default async ({ data, mongo, cb }) => {
     accept: 'application/activity+json',
     body: reqBody
   });
+
   if (response.status === 202 && response.statusText === 'Accepted') { // accepted
-    // store as followed and remove the entry from inbox
-    await mongo.insertOne('followers',
+    await mongo.insertOne('following',
       { actor: data.actor,
         inserted: new Date(),
         updated: new Date() // in case, for example when an update call is received
       }
     );
-    await mongo.deleteOne('inbox', {_id: data.id});
     return {
       error: null,
       message: 'Follow accepted',
@@ -73,3 +71,4 @@ export default async ({ data, mongo, cb }) => {
     };
   }
 }
+

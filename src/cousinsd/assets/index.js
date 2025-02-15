@@ -6,7 +6,6 @@ import { performSearch } from './search.js';
 let token;
 
 const initHome = async () => {
-  console.log('init homw?');
   const el = document.querySelector('#searchButton');
   el.addEventListener('click', performSearch);
 }
@@ -48,9 +47,7 @@ const app = async () => {
     el.classList.toggle('dn');
   });
 
-  console.log(window.location.pathname);
   const pathnameParts = window.location.pathname.split('/');
-  console.log(pathnameParts);
   const filename = pathnameParts[pathnameParts.length - 1];
   if (filename === 'inbox') {
     await initInbox();

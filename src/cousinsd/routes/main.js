@@ -11,32 +11,33 @@ export default async (req, res, opts) => {
   let data;
   let body;
 
-  if (filename === 'index' || filename === 'home' || filename === '') {
+  if (filename === 'home' || filename === 'index' || filename === '') {
     data = await mongo.findOne('actor', { id: actor })
-  } else if (['inbox', 'outbox', 'messages'].includes(filename)) {
-    data = await mongo.findMany(filename, {})
   } else {
-    data = await mongo.findOne(filename, { actor })
+    data = await mongo.findMany(filename)
   }
+  data.actor = actor;
 
   if (fs.existsSync(join(__dirname, `${filename}.${content_type}.js`))) {
     body = await import(join(__dirname, `${filename}.${content_type}.js`))
-      .then(async ({ default: fn }) => await fn(data));
+      .then(async ({ default: fn }) => await fn(req, res, data));
   }
 
-  if (typeof body === 'undefined') body = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
   switch (content_type) {
     case 'html':
+      if (typeof body === 'undefined') body = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
       const guid = crypto.randomBytes(16).toString('hex');
-      await mongo.updateOne('tokens', { name: process.env.NAME }, { '$set': { name: process.env.NAME, token: guid }});
+      await mongo.updateOne('tokens', { name: req.env.name }, { '$set': { name: req.env.name, token: guid }});
       res.write(html({
-        title: `${process.env.NAME} - ${filename}`,
+        title: `@${req.env.name} - ${filename}`,
         body,
         guid,
+        env: req.env
       }));
       break;
     case 'json':
-      res.write(data);
+      if (typeof body === 'undefined') body = data;
+      res.write(body);
       break;
     default:
       throw new Error('Content type is not valid');
