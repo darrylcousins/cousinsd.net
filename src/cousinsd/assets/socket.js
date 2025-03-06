@@ -32,7 +32,7 @@ export const IOConnect = async (opts) => {
 
   socket.on('connect', () => {
     appendMessage('Connected ... sending data:', 'green');
-    appendMessage(JSON.stringify({ ...data, object: '{ ... }'}, null, 2));
+    appendMessage(JSON.stringify({ ...data }, null, 2));
 
     socket.emit('data_request', data, (response) => {
       appendMessage(response, 'blue');

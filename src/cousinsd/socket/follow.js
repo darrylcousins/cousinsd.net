@@ -1,70 +1,50 @@
 import { ObjectId } from 'mongodb';
-import Signature from '../lib/signature.js';
+import Worker from './worker.js';
 
+/*
+ * Follow a user on another platform.
+ * Linked in the client/browser ui from search (home) and followers.
+ *
+ * data:can be a 'follower' id or actor id to be fetched
+ */
 export default async ({ data, mongo, cb }) => {
-  const signature = new Signature();
-  const actor = await mongo.findOne('actor', { preferredUsername: process.env.NAME });
-  cb('Fetching actor');
-  data.actor = await fetch(data.id, {
-    method: 'GET',
-    headers: {
-      accept: 'application/activity+json'
-    }
-  }).then(response => response.json());
 
-  // if we don't find the actor
-  if (Object.hasOwnProperty.call(data.actor, 'error') || !data.actor.id) {
+  const worker = new Worker(data, mongo, cb);
+  let body;
+  let response;
+
+  if (Object.hasOwnProperty.call(data, 'id')) {
+    // get the follower from mongo
+    const follower = await mongo.findOne('followers', { _id: data.id });
+    data.actor = follower.actor;
+  }
+
+  try {
+    await worker.build();
+    body = worker.makeBody('Follow', worker.data.actor.id);
+    await worker.logActivity({ body, inbox: worker.data.actor.inbox });
+    response = await worker.postData(body);
+  } catch(e) {
     return {
       error: true,
-      message: 'Failed to fetch actor',
+      message: `${e.message}\n${e.stack}`,
     };
   }
-  cb(`Got actor: ${data.actor.preferredUsername} <${data.actor.url}>`);
-
-  // send accept post request
-  const _id = new ObjectId();
-  const message = {
-    '@context': 'https://www.w3.org/ns/activitystreams',
-    id: `${actor.id}/messages/${_id.toString()}`,
-    type: "Follow",
-    actor: `${data.actor.id}`,
-    object: `${actor.id}`, // yes me
-  }
-  const reqBody = JSON.stringify(message);
-
-  message._id = _id;
-  message.inserted = new Date();
-  message.updated = new Date();
-  await mongo.insertOne('messages', message);
-  // create signed headers and send accept message
-  const keys = await mongo.findOne('keys', {id: actor.id});
-  const headers = signature.headers({ 
-    inbox: data.actor.inbox,
-    reqBody,
-    privateKey: keys.privateKey,
-    keyId: actor.id
-  });
-  const response = await fetch(data.actor.inbox, {
-    headers,
-    method: 'POST',
-    accept: 'application/activity+json',
-    body: reqBody
-  });
-
   if (response.status === 202 && response.statusText === 'Accepted') { // accepted
     await mongo.insertOne('following',
-      { actor: data.actor,
+      { actor: worker.data.actor,
+        object: body, // keep the original in case we send an 'Undo' in the future
         inserted: new Date(),
         updated: new Date() // in case, for example when an update call is received
       }
     );
+    // the accept or otherwise will be logged to activitylog upon receipt to inbox
+    // and the object will be updated when acknowledged from the inbox ui
     return {
       error: null,
       message: 'Follow accepted',
     };
   } else {
-    console.log('status fail');
-    // bugger I've been rejected, possibly it would have json info else just store the status and statusText
     return {
       error: true,
       message: 'Failed',

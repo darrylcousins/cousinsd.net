@@ -10,6 +10,7 @@ export default (req, res, doc) => {
     items: doc.map((el) => {
       return {
         name: el.actor.name,
+        id: el.actor.id,
         inserted: dateString(el.inserted)
       }
     }),

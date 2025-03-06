@@ -25,6 +25,11 @@ io.on('connection', (socket) => {
 
     callback('Data received ... processing ...');
 
+    // the case where a follow request has been accepted by external actor
+    if (data.type === 'Yay') data.type = 'Accepted'; // making the ui friendly
+
+    console.log(data);
+
     const cb = (message, plain, final) => {
       if (plain) {
         socket.emit("data_plain", message);
@@ -65,7 +70,7 @@ io.use(async (socket, next) => {
   const token = await mongo.findOne('tokens', {name: process.env.NAME}); 
   if (socket.handshake.auth.token !== token.token) {
     err = new Error('Failed authorization');
-    err.data = 'Incorrect authentiation token';
+    err.data = 'Incorrect authentication token';
     next(err);
     return;
   }

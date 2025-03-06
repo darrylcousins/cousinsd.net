@@ -10,17 +10,25 @@ export default async (req, res, opts) => {
   const { actor, mongo, content_type, filename } = opts;
   let data;
   let body;
+  let title = `@${req.env.name} > ${filename}`;
 
   if (filename === 'home' || filename === 'index' || filename === '') {
-    data = await mongo.findOne('actor', { id: actor })
+    data = await mongo.findOne('actor', { id: actor });
   } else {
-    data = await mongo.findMany(filename)
+    if (req.id && filename === 'activitylog') { // might stretch this later for outbox?
+      data = await mongo.findOne(filename, { _id: req.id });
+      title += ` > ${req.id}`;
+    } else {
+      data = await mongo.findMany(filename);
+    }
   }
-  data.actor = actor;
+  if (!Object.hasOwnProperty.call(data, 'actor')) {
+    data.actor = actor;
+  }
 
   if (fs.existsSync(join(__dirname, `${filename}.${content_type}.js`))) {
     body = await import(join(__dirname, `${filename}.${content_type}.js`))
-      .then(async ({ default: fn }) => await fn(req, res, data));
+      .then(async ({ default: fn }) => await fn(req, res, data, mongo));
   }
 
   switch (content_type) {
@@ -29,7 +37,7 @@ export default async (req, res, opts) => {
       const guid = crypto.randomBytes(16).toString('hex');
       await mongo.updateOne('tokens', { name: req.env.name }, { '$set': { name: req.env.name, token: guid }});
       res.write(html({
-        title: `@${req.env.name} - ${filename}`,
+        title,
         body,
         guid,
         env: req.env

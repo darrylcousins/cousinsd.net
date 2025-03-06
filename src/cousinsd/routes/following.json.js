@@ -10,7 +10,9 @@ export default (req, res, doc) => {
     items: doc.map((el) => {
       return {
         name: el.actor.name,
-        inserted: dateString(el.inserted)
+        id: el.actor.id,
+        inserted: dateString(el.inserted),
+        updated: dateString(el.updated)
       }
     }),
     first: `${actor}/following?page=1`

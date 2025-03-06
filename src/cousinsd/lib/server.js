@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import { ObjectId } from 'mongodb';
 import Logger from '../lib/logger.js';
 import Mongo from '../lib/mongo.js';
 import Signature from '../lib/signature.js';
@@ -29,9 +30,9 @@ class Server {
     this.actor = `${this.host}/${process.env.NAME}`;
     this.request = new Request();
     this.response = new Response();
+    this.signature = new Signature();
   
     this.mongo = new Mongo(process.env.MONGO_URI);
-    this.signature = new Signature();
     this.logger = new Logger({ ...this.request.server, ...this.request.headers });
     fs.writeFileSync(join(__dirname, '../logs/wtf.log'), JSON.stringify(this.request.headers, null, 2));
 
@@ -68,7 +69,8 @@ class Server {
     }
 
     /* node:coverage enable */
-    this.logger.app('Server constructor has run');
+    //this.logger.app('Server constructor has run');
+
   }
 
   async close(status) {
@@ -78,6 +80,13 @@ class Server {
       this.response.setStatus(`${status} Not Found`);
       this.response.setContentType('text/html; charset=utf-8');
       await import('../routes/404.js')
+        .then(async ({ default: fn }) => await fn(this.request, this.response));
+      return;
+    }
+    if (status === 403) {
+      this.response.setStatus(`${status} Forbidden`);
+      this.response.setContentType('text/html; charset=utf-8');
+      await import('../routes/403.js')
         .then(async ({ default: fn }) => await fn(this.request, this.response));
       return;
     }
@@ -130,6 +139,11 @@ class Server {
     this.close();
   }
 
+  /*
+   * 1. Returns any js or css assets to the the browser
+   * 2. Returns files requested by GET method
+   * 3. Processes any POST requests into the inbox
+  */
   async run() {
     const match = this.request.filename.match(/\.(js|css)$/) ;
     if (Boolean(match)) {
@@ -145,7 +159,7 @@ class Server {
       return;
     } else {
       // only log activities
-      this.logger.app(`running ${this.request.method} ${this.request.filename}`);
+      this.logger.app(`running ${this.request.method} ${this.request.filename} ${this.request.id}`);
     }
     if (this.request.filename !== 'inbox' && this.request.method !== 'GET') {
       this.close('400 Bad Request - Wrong Method');
@@ -159,7 +173,13 @@ class Server {
     };
 
     if (this.request.method === 'GET') {
-      if (!['index', 'inbox', 'outbox', 'profile', 'followers', 'following', ''].includes(this.request.filename)) {
+      if (this.request.env.remote_addr !== this.request.env.authip && this.content_type === 'html') {
+        if (['inbox', 'followers', 'following', 'activitylog', ''].includes(this.request.filename)) {
+          this.close(403);
+          return;
+        }
+      }
+      if (!['index', 'inbox', 'outbox', 'profile', 'followers', 'following', 'activitylog', ''].includes(this.request.filename)) {
         this.close(404);
         return;
       }
@@ -167,6 +187,7 @@ class Server {
         await import('../routes/main.js')
           .then(async ({ default: fn }) => await fn(this.request, this.response, opts));
       } catch(e) {
+        // catch any fatal errors
         this.error(e);
         return;
       } finally {
@@ -263,6 +284,7 @@ class Server {
           // not all types needs this storage
           // a follow request does
           // an accept does not etc
+          // for a `actor delete` first check if relevant - i.e. in following or followers
           try {
             await this.mongo.insertOne('inbox', {
               actor: {id: actor.id, inbox: actor.inbox },
@@ -270,6 +292,18 @@ class Server {
               body: reqBody, // body as received
               inserted: new Date(),
               updated: new Date() // in case
+            });
+            // also add to the activity log
+            const _id = new ObjectId();
+            delete data['@context'];
+            await this.mongo.insertOne('activitylog', {
+              _id,
+              id: `${this.actor}/activitylog/${_id.toString()}`,
+              actor: data.actor,
+              to: `${this.actor}/inbox`,
+              object: data,
+              inserted: new Date(),
+              updated: new Date()
             });
           /* node:coverage disable */
           } catch(e) {

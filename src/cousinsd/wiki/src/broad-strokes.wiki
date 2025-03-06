@@ -1,0 +1,27 @@
+= Broad Strokes =
+
+== Design ==
+
+For all activity interactions with other servers my local actor is now an `agent`, the other remains the `actor`.
+
+=== Serving ===
+
+The application runs as a `fastcgi` script behind `nginx`. This avoids having a
+running process and seems to me to be adequate for my purposes.
+
+The entry point for the application is `index.js` which initializes the local
+`.env` files and loads the `cgi.js` from the `bin` folder.
+
+=== Folders ===
+
+The base folders of the project are:
+
+  * `assets`: Contains `.js` and `.css` files that are loaded via `nginx`.
+  * `bin`: Contains only `cgi.js` as described above.
+  * `lib`: Very much the body of the application.
+  * `routes`: Handles the routing.
+  * `socket`: Handles calls from the browser end.
+  * `tests`: Contains tests - TODO - needs more work.
+
+
+

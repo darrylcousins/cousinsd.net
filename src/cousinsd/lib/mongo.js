@@ -17,7 +17,7 @@ class Mongo {
   }
 
   async findMany(collection, query, options) {
-    return await this.client.db().collection(collection).find(query, options).toArray();
+    return await this.client.db().collection(collection).find(query, options).sort({inserted: -1}).toArray();
   }
 
   async updateOne(collection, query, doc) {

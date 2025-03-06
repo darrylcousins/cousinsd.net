@@ -1,0 +1,3 @@
+= ActivityPub Project =
+
+* [[broad-strokes|Broad Strokes]]: A broad picture of how the software architecture is structured.

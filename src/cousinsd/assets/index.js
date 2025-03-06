@@ -2,8 +2,11 @@ import { IOConnect } from './socket.js';
 import { collapseElement, expandElement } from './animator.js';
 import { performAction } from './action.js';
 import { performSearch } from './search.js';
+import hljs from './highlight.min.js';
+import json from './json.min.js';
 
 let token;
+hljs.registerLanguage('json', json);
 
 const initHome = async () => {
   const el = document.querySelector('#searchButton');
@@ -47,9 +50,21 @@ const app = async () => {
     el.classList.toggle('dn');
   });
 
-  const pathnameParts = window.location.pathname.split('/');
-  const filename = pathnameParts[pathnameParts.length - 1];
-  if (filename === 'inbox') {
+  let filename = '';
+  let id;
+  
+  const parts  = window.location.pathname.split('/');
+  if (parts.length > 3) {
+    filename = parts[parts.length - 2];
+    const tid = parts[parts.length - 1];
+    if (tid.length === 24) { // only use this if match ObjectId length
+      id = tid;
+    }
+  } else if (parts.length > 2) {
+    filename = parts[parts.length - 1];
+  }
+
+  if (['inbox', 'followers', 'following', 'activitylog'].includes(filename)) {
     await initInbox();
   } else if (filename === '') {
     await initHome();
@@ -59,7 +74,13 @@ const app = async () => {
   const tokenElement = document.querySelector('token');
   token = tokenElement.getAttribute('value');
 
-  // finally, show the content
+  //s highlight json
+  document.querySelectorAll('div.code').forEach(el => {
+    console.log(el);
+    console.log(hljs);
+    hljs.highlightElement(el);
+  });
+
   setTimeout(() => {
     document.querySelectorAll('.content').forEach((el) => {
       el.classList.toggle('visible');

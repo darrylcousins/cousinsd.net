@@ -12,6 +12,7 @@ class Request {
   method = null;
   httpVersion = null;
   filename = '';
+  id = null;
   query = {};
   env = {};
   headers = {};
@@ -48,7 +49,13 @@ class Request {
     this.query = this.url.query;
 
     const parts  = this.url.pathname.split('/');
-    if (parts.length > 2) {
+    if (parts.length > 3) {
+      this.filename = parts[parts.length - 2];
+      const id = parts[parts.length - 1];
+      if (id.length === 24) { // only use this if match ObjectId length
+        this.id = id;
+      }
+    } else if (parts.length > 2) {
       this.filename = parts[parts.length - 1];
     }
     // letting server handle this

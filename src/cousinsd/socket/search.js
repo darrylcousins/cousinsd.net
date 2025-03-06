@@ -67,6 +67,9 @@ export default async ({ data, mongo, cb }) => {
       cb(JSON.stringify(result, null, 2), 'plain');
     }
   };
+  const following = await mongo.findOne('following', {'actor.id': actor.id});
+  console.log(actor.id);
+  const follower = await mongo.findOne('followers', {'actor.id': actor.id});
   cb(JSON.stringify({
     preferredUsername: actor.preferredUsername,
     icon: actor.icon,
@@ -75,6 +78,8 @@ export default async ({ data, mongo, cb }) => {
     id: actor.id,
     followingCount: counts.following,
     followersCount: counts.followers,
+    following: Boolean(following),
+    follower: Boolean(follower),
   }, null, 2), null, true);
   return {
     error: null,
